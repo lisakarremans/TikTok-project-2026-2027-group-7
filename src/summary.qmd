@@ -8,8 +8,8 @@ library(dplyr)
 library(tidyverse)
 views <- read.csv("TikTok-project-2026-2027-group-7/data/raw/video_view.csv")
 
-x <- nrow(views)
-print(x)
+count_rows <- nrow(views)
+print(count_rows)
 
 str(views)
 head(views)
@@ -23,9 +23,9 @@ overview <- views %>%
     avg_length = mean(video_length_sec),
     avg_impressions = mean(impressions_n),
     avg_watched = mean(watched_n),
-    avg_watch_rate = 
-    avg_watch_share = 
-    avg_watch_seconds = 
+    avg_watch_rate = mean(watch_rate, na.rm=TRUE),
+    avg_watch_share = mean(avg_watch_share, na.rm=TRUE),
+    avg_watch_seconds = mean(avg_watch_seconds_when_watched, na.rm=TRUE) 
   )
 
 print(overview)
