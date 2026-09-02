@@ -30,8 +30,8 @@ overview <- views %>%
 
 print(overview)
 
-mean(views$watch_rate)
-mean(views$avg_watch_share)
+mean(views$watch_rate, na.rm=TRUE)
+mean(views$avg_watch_share, na.rm=TRUE)
 
 views$watched_pct <- views$watched_n / views$impressions_n * 100
 
