@@ -1,19 +1,22 @@
-# TikTok-project-template-2026
+# TikTok-project-template-2026-group-7
 
 ## Goal
 Short project objective.
 
 ## Data
-- Main file:
+- Main file: video_view.csv
 
 ## Requirements
 - R
-- Packages:
+- Packages: dplyr, tidyverse
 - Quarto installed
 
 ## Run steps
-1. `Rscript analysis.R`
-2. `quarto render report.qmd`
+1. `script.r`
+2. `summary.qmd`
 
 ## Expected output
 - report.html
+
+## Structure
+- Data file can be found in /data/raw

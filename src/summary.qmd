@@ -4,9 +4,9 @@ format: html
 ---
 
 ```{r}
-views <- read.csv("C:\Users\JeroenSwolfs\Documents\TikTok-project-template-2026\data\video_view.csv")
 library(dplyr)
 library(tidyverse)
+views <- read.csv("TikTok-project-2026-2027-group-7/data/raw/video_view.csv")
 
 x <- nrow(views)
 print(x)
