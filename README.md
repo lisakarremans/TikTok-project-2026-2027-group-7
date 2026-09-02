@@ -19,4 +19,5 @@ Short project objective.
 - report.html
 
 ## Structure
-- Data file can be found in /data/raw
+- Data file must be put in /data/raw
+- The codes that should be run can be found in folder /src
