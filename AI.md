@@ -1,1 +1,1 @@
-I used CHATgpt as I got an error which pushing the document in github, my fellow groupmember could not see it in Github so I asked it what the error was. The error was that my account was not correct and I had to log in again - Tess
+I used CHATgpt 5.6 as I got an error with pushing the document in github, my fellow groupmember could not see it in Github so I asked it what the error was. The error was that my account was not correct and I had to log in again - Tess

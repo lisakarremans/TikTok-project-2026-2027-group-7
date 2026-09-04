@@ -1,7 +1,7 @@
 # TikTok-project-template-2026-group-7
 
 ## Goal
-Short project objective.
+The goal is to practice with Quarto, dplyr, aggregration, and work with Git to gain more knowledge about how it works.
 
 ## Data
 - Main file: video_view.csv
