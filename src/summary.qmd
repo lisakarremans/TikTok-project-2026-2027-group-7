@@ -4,6 +4,8 @@ format: html
 ---
 
 ```{r}
+# Produce a clean Quarto summary for one selected CSV file #3
+
 library(dplyr)
 library(tidyverse)
 views <- read.csv("TikTok-project-2026-2027-group-7/data/raw/video_view.csv")
@@ -15,6 +17,10 @@ str(views)
 head(views)
 summary(views)
 colSums(is.na(views))
+
+names(views)
+glimpse(views)
+summary(views$watch_rate)
 
 overview <- views %>%
   summarize(
@@ -42,25 +48,7 @@ hist(views$video_length_sec)
 
 goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
-```
 
-
-```{r}
-# Produce a clean Quarto summary for one selected CSV file #3
-
-head(views)
-names(views)
-glimpse(views)
-summary(views$watch_rate)
-summary(views)
-
-# Gives the summary of the dataset
-views %>%
-  summarise(
-    total_impressions = sum(impressions_n, na.rm = TRUE),
-    avg_watch_rate = mean(watch_rate, na.rm = TRUE),
-    n_videos = n()
-  )
 
 # Gives the summary for each creator
 creator_summary <- views %>%
@@ -84,6 +72,12 @@ creator_engagement <- views %>%
   group_by(creator_id) %>%
   summarise(mean_engagement = mean(engagement, na.rm = TRUE)) %>%
   arrange(desc(mean_engagement))
+```
+
+
+```{r}
+
+
 
 
 ```

@@ -12,8 +12,8 @@ Short project objective.
 - Quarto installed
 
 ## Run steps
-1. `script.r`
-2. `summary.qmd`
+1. Run `script.r`, which is under the map src, to download the data which is under the map src.
+2. Run `summary.qmd` which is under the map src.
 
 ## Expected output
 - report.html
