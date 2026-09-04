@@ -20,3 +20,9 @@
 
 ## Structure
 - The data file (video_view.csv) should be be put in the folder /data/raw
+
+## Group members
+-
+-
+-
+-
