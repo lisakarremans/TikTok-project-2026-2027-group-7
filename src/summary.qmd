@@ -43,3 +43,47 @@ hist(views$video_length_sec)
 goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
 ```
+
+
+```{r}
+# Produce a clean Quarto summary for one selected CSV file #3
+
+head(views)
+names(views)
+glimpse(views)
+summary(views$watch_rate)
+summary(views)
+
+# Gives the summary of the dataset
+views %>%
+  summarise(
+    total_impressions = sum(impressions_n, na.rm = TRUE),
+    avg_watch_rate = mean(watch_rate, na.rm = TRUE),
+    n_videos = n()
+  )
+
+# Gives the summary for each creator
+creator_summary <- views %>%
+  group_by(creator_id) %>%
+  summarise(
+    videos_n = n(),
+    impressions_total = sum(impressions_n, na.rm = TRUE),
+    watch_rate_avg = mean(watch_rate, na.rm = TRUE)
+  ) %>%
+  arrange(desc(impressions_total))
+
+# Gives the top videos that are watched with at least 60 impressions
+top_watch <- views %>%
+  select(video_id, creator_id, watch_rate, impressions_n) %>%
+  filter(impressions_n >= 60) %>%
+  arrange(desc(watch_rate))
+
+# gives the average engagement for each creator
+creator_engagement <- views %>%
+  mutate(engagement = watched_n / impressions_n) %>%
+  group_by(creator_id) %>%
+  summarise(mean_engagement = mean(engagement, na.rm = TRUE)) %>%
+  arrange(desc(mean_engagement))
+
+
+```
