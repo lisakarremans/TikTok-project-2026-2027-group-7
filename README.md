@@ -12,12 +12,12 @@
 - Quarto installed
 
 ## Run steps
-1. Run `script.r`, which is under the map src, to download the data which is under the map src.
-2. Run `summary.qmd` which is under the map src.
+1. Run `script.r` (in folder /src)
+2. Run `summary.qmd` (in folder /src)
 
 ## Expected output
 
 
 ## Structure
-- Data file should be be put in /data/raw
-- The codes that should be run can be found in folder /src
+- The data file (video_view.csv) should be be put in the folder /data/raw
+- The codes that should be run can be found in the folder /src
