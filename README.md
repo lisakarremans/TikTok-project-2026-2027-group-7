@@ -12,7 +12,7 @@
 - Quarto installed
 
 ## Run steps
-1. Run `script.r` (in folder /src)
+1. Run `script.r` (in folder /data/raw)
 2. Run `summary.qmd` (in folder /src)
 
 ## Expected output
@@ -20,4 +20,3 @@
 
 ## Structure
 - The data file (video_view.csv) should be be put in the folder /data/raw
-- The codes that should be run can be found in the folder /src
