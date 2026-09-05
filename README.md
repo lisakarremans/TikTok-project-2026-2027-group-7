@@ -25,5 +25,5 @@ The goal is to practice with Quarto, dplyr, aggregration, and work with Git to g
 ## Group members
 -Lisa Karremans: working together with Rijk during the coaching session to finish most of the Issues and finilizing the final details of the project
 -Rijk van Diest: working together with Lisa during the coaching session to finish most of the Issues
--Tess Mehlbaum: adding extra input to the summary codes to complete it, finilizing the README
+-Tess Mehlbaum: adding extra input to the summary codes to complete it and structure it with comments, finilizing the README
 -Tiem Spitz:
