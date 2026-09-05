@@ -49,7 +49,6 @@ hist(views$video_length_sec)
 goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
 
-
 # Gives the summary for each creator
 creator_summary <- views %>%
   group_by(creator_id) %>%
@@ -72,12 +71,4 @@ creator_engagement <- views %>%
   group_by(creator_id) %>%
   summarise(mean_engagement = mean(engagement, na.rm = TRUE)) %>%
   arrange(desc(mean_engagement))
-```
-
-
-```{r}
-
-
-
-
 ```
