@@ -3,13 +3,18 @@ title: "TikTok Video View Summary"
 format: html
 ---
 
-```{r}
-# Produce a clean Quarto summary for one selected CSV file #3
+# Setup & Data Import
 
+```{r}
 library(dplyr)
 library(tidyverse)
-views <- read.csv("TikTok-project-2026-2027-group-7/data/raw/video_view.csv")
 
+views <- read.csv("../data/raw/video_view.csv")
+```
+
+# Data Inspection
+
+```{r}
 count_rows <- nrow(views)
 print(count_rows)
 
@@ -20,8 +25,11 @@ colSums(is.na(views))
 
 names(views)
 glimpse(views)
-summary(views$watch_rate)
+```
 
+# General Summary
+
+```{r}
 overview <- views %>%
   summarize(
     videos = n(),
@@ -35,21 +43,38 @@ overview <- views %>%
   )
 
 print(overview)
+```
 
-mean(views$watch_rate, na.rm=TRUE)
-mean(views$avg_watch_share, na.rm=TRUE)
-
+```{r}
 views$watched_pct <- views$watched_n / views$impressions_n * 100
-
-topvideo <- views[views$impressions_n == max(views$impressions_n), ]
-print(topvideo)
 
 hist(views$video_length_sec)
 
 goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
+```
 
-# Gives the summary for each creator
+# Top Videos
+
+### Top Video by Impressions
+```{r}
+topvideo <- views[views$impressions_n == max(views$impressions_n), ]
+print(topvideo)
+```
+
+### Top Videos by Watch Rate
+```{r}
+top_watch <- views %>%
+  select(video_id, creator_id, watch_rate, impressions_n) %>%
+  filter(impressions_n >= 60) %>%
+  arrange(desc(watch_rate))
+
+head(top_watch)
+```
+
+# Creator Performance
+
+```{r}
 creator_summary <- views %>%
   group_by(creator_id) %>%
   summarise(
@@ -59,16 +84,15 @@ creator_summary <- views %>%
   ) %>%
   arrange(desc(impressions_total))
 
-# Gives the top videos that are watched with at least 60 impressions
-top_watch <- views %>%
-  select(video_id, creator_id, watch_rate, impressions_n) %>%
-  filter(impressions_n >= 60) %>%
-  arrange(desc(watch_rate))
+head(creator_summary)
+```
 
-# gives the average engagement for each creator
+```{r}
 creator_engagement <- views %>%
   mutate(engagement = watched_n / impressions_n) %>%
   group_by(creator_id) %>%
   summarise(mean_engagement = mean(engagement, na.rm = TRUE)) %>%
   arrange(desc(mean_engagement))
+
+head(creator_engagement)
 ```

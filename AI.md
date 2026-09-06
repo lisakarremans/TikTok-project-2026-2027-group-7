@@ -1,1 +1,2 @@
 I used CHATgpt 5.6 as I got an error with pushing the document in github, my fellow groupmember could not see it in Github so I asked it what the error was. The error was that my account was not correct and I had to log in again - Tess
+I used Gemmini to help me fix the error when loading the data file, to fix the file path, and to help me organize the codes into separate blocks - Tiem
