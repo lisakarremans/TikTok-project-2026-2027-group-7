@@ -57,7 +57,7 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  padding: 0; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
@@ -124,11 +124,20 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ forcats   1.0.1     ✔ readr     2.2.0
-✔ ggplot2   4.0.3     ✔ stringr   1.6.0
-✔ lubridate 1.9.5     ✔ tibble    3.3.1
-✔ purrr     1.2.2     ✔ tidyr     1.3.2</code></pre>
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ stringr   1.5.1
+✔ lubridate 1.9.5     ✔ tibble    3.3.0
+✔ purrr     1.2.2     ✔ tidyr     1.3.1</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -136,119 +145,119 @@ Attaching package: 'dplyr'</code></pre>
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>views <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/raw/video_view.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>views <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/raw/video_view.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="data-inspection" class="level1">
 <h1>Data Inspection</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>count_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(views)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(count_rows)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>count_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(views)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(count_rows)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1200</code></pre>
+<pre><code>[1] 15000</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   1200 obs. of  16 variables:
+<pre><code>'data.frame':   15000 obs. of  16 variables:
  $ video_id                      : int  1 2 3 4 5 6 7 8 9 10 ...
- $ creator_id                    : int  37 5 46 48 47 26 34 17 44 56 ...
- $ video_length_sec              : int  24 52 23 36 33 34 31 48 32 32 ...
- $ published_at                  : int  1754354430 1756627738 1758745786 1754929845 1755603913 1755473145 1755617914 1754956707 1757241464 1756452723 ...
- $ video_url                     : chr  "https://www.tiktok.com/@charlottegarcia/video/9000000000000000001" "https://www.tiktok.com/@evelyndaily3219/video/9000000000000000002" "https://www.tiktok.com/@benjaminhub4825/video/9000000000000000003" "https://www.tiktok.com/@isabellahub287/video/9000000000000000004" ...
- $ impressions_n                 : int  66 15 1 42 24 26 21 31 14 18 ...
- $ watched_n                     : int  42 9 0 23 21 11 15 22 6 10 ...
- $ watch_rate                    : num  0.636 0.6 0 0.548 0.875 ...
- $ avg_watch_seconds_when_watched: num  12 34.1 NA 14.5 17.2 ...
- $ total_watch_seconds           : int  506 307 0 333 362 234 304 408 106 172 ...
- $ avg_watch_share               : num  0.319 0.394 0 0.22 0.457 ...
- $ distinct_watchers_n           : int  34 8 0 18 17 11 14 20 6 10 ...
- $ first_impression_at           : int  1754358053 1756749929 1758673041 1754925674 1755665455 1755451424 1755761985 1754892664 1757264836 1754024525 ...
- $ last_impression_at            : int  1758872692 1758795937 1758673041 1759091428 1758877787 1758656774 1759173025 1758975300 1758902557 1758973380 ...
- $ first_watch_at                : int  1754358053 1756749929 1758673041 1754925674 1755665455 1755451424 1755761985 1754892664 1757264836 1754024525 ...
- $ last_watch_at                 : int  1758872692 1758795937 1758673041 1759091428 1758877787 1758656774 1759173025 1758975300 1758902557 1758973380 ...</code></pre>
+ $ creator_id                    : int  66 62 176 22 39 148 158 30 200 19 ...
+ $ video_length_sec              : int  14 47 37 29 28 36 30 34 25 48 ...
+ $ published_at                  : int  1767297237 1768475971 1766815457 1755689136 1762696418 1764970157 1759673374 1761892728 1765311540 1754999699 ...
+ $ video_url                     : chr  "https://www.tiktok.com/@olivialive2824/video/9000000000000000001" "https://www.tiktok.com/@isabellabrown/video/9000000000000000002" "https://www.tiktok.com/@isabellawalker/video/9000000000000000003" "https://www.tiktok.com/@lucastaylor/video/9000000000000000004" ...
+ $ impressions_n                 : int  4 0 14 67 25 14 23 19 6 86 ...
+ $ watched_n                     : int  3 0 10 49 18 7 19 14 4 64 ...
+ $ watch_rate                    : num  0.75 NA 0.714 0.731 0.72 ...
+ $ avg_watch_seconds_when_watched: num  10.7 NA 18.6 15.4 14.4 ...
+ $ total_watch_seconds           : int  32 0 186 754 260 133 322 273 73 1517 ...
+ $ avg_watch_share               : num  0.571 NA 0.359 0.388 0.371 ...
+ $ distinct_watchers_n           : int  3 0 10 43 15 7 19 14 4 59 ...
+ $ first_impression_at           : int  1768287244 NA 1766868873 1755661745 1762792600 1765069292 1760437074 1761884324 1766379466 1754976917 ...
+ $ last_impression_at            : int  1769439546 NA 1769741156 1769429852 1769860569 1769101217 1769432213 1768955216 1769566589 1769855964 ...
+ $ first_watch_at                : int  1768287244 NA 1766868873 1755661745 1762792600 1765069292 1760437074 1761884324 1766379466 1754976917 ...
+ $ last_watch_at                 : int  1769439546 NA 1769741156 1769429852 1769860569 1769101217 1769432213 1768955216 1769566589 1769855964 ...</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  video_id creator_id video_length_sec published_at
-1        1         37               24   1754354430
-2        2          5               52   1756627738
-3        3         46               23   1758745786
-4        4         48               36   1754929845
-5        5         47               33   1755603913
-6        6         26               34   1755473145
-                                                          video_url
-1 https://www.tiktok.com/@charlottegarcia/video/9000000000000000001
-2 https://www.tiktok.com/@evelyndaily3219/video/9000000000000000002
-3 https://www.tiktok.com/@benjaminhub4825/video/9000000000000000003
-4  https://www.tiktok.com/@isabellahub287/video/9000000000000000004
-5     https://www.tiktok.com/@avawalker_1/video/9000000000000000005
-6    https://www.tiktok.com/@noahlive7510/video/9000000000000000006
+1        1         66               14   1767297237
+2        2         62               47   1768475971
+3        3        176               37   1766815457
+4        4         22               29   1755689136
+5        5         39               28   1762696418
+6        6        148               36   1764970157
+                                                         video_url
+1 https://www.tiktok.com/@olivialive2824/video/9000000000000000001
+2  https://www.tiktok.com/@isabellabrown/video/9000000000000000002
+3 https://www.tiktok.com/@isabellawalker/video/9000000000000000003
+4    https://www.tiktok.com/@lucastaylor/video/9000000000000000004
+5       https://www.tiktok.com/@avabrown/video/9000000000000000005
+6 https://www.tiktok.com/@harperwalker_1/video/9000000000000000006
   impressions_n watched_n watch_rate avg_watch_seconds_when_watched
-1            66        42  0.6363636                       12.04762
-2            15         9  0.6000000                       34.11111
-3             1         0  0.0000000                             NA
-4            42        23  0.5476190                       14.47826
-5            24        21  0.8750000                       17.23810
-6            26        11  0.4230769                       21.27273
+1             4         3  0.7500000                       10.66667
+2             0         0         NA                             NA
+3            14        10  0.7142857                       18.60000
+4            67        49  0.7313433                       15.38776
+5            25        18  0.7200000                       14.44444
+6            14         7  0.5000000                       19.00000
   total_watch_seconds avg_watch_share distinct_watchers_n first_impression_at
-1                 506       0.3194444                  34          1754358053
-2                 307       0.3935897                   8          1756749929
-3                   0       0.0000000                   0          1758673041
-4                 333       0.2202381                  18          1754925674
-5                 362       0.4570707                  17          1755665455
-6                 234       0.2647059                  11          1755451424
+1                  32       0.5714286                   3          1768287244
+2                   0              NA                   0                  NA
+3                 186       0.3590734                  10          1766868873
+4                 754       0.3880597                  43          1755661745
+5                 260       0.3714286                  15          1762792600
+6                 133       0.2638889                   7          1765069292
   last_impression_at first_watch_at last_watch_at
-1         1758872692     1754358053    1758872692
-2         1758795937     1756749929    1758795937
-3         1758673041     1758673041    1758673041
-4         1759091428     1754925674    1759091428
-5         1758877787     1755665455    1758877787
-6         1758656774     1755451424    1758656774</code></pre>
+1         1769439546     1768287244    1769439546
+2                 NA             NA            NA
+3         1769741156     1766868873    1769741156
+4         1769429852     1755661745    1769429852
+5         1769860569     1762792600    1769860569
+6         1769101217     1765069292    1769101217</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    video_id        creator_id    video_length_sec  published_at      
- Min.   :   1.0   Min.   : 1.00   Min.   :10.00    Min.   :1.754e+09  
- 1st Qu.: 300.8   1st Qu.:19.00   1st Qu.:23.00    1st Qu.:1.755e+09  
- Median : 600.5   Median :30.00   Median :29.00    Median :1.757e+09  
- Mean   : 600.5   Mean   :30.95   Mean   :29.55    Mean   :1.757e+09  
- 3rd Qu.: 900.2   3rd Qu.:44.00   3rd Qu.:36.00    3rd Qu.:1.758e+09  
- Max.   :1200.0   Max.   :60.00   Max.   :60.00    Max.   :1.759e+09  
+<pre><code>    video_id       creator_id     video_length_sec  published_at      
+ Min.   :    1   Min.   :  1.00   Min.   :10.00    Min.   :1.754e+09  
+ 1st Qu.: 3751   1st Qu.: 48.00   1st Qu.:23.00    1st Qu.:1.758e+09  
+ Median : 7500   Median : 97.00   Median :30.00    Median :1.762e+09  
+ Mean   : 7500   Mean   : 98.06   Mean   :30.08    Mean   :1.762e+09  
+ 3rd Qu.:11250   3rd Qu.:146.00   3rd Qu.:37.00    3rd Qu.:1.766e+09  
+ Max.   :15000   Max.   :200.00   Max.   :60.00    Max.   :1.770e+09  
                                                                       
-     video_url    impressions_n      watched_n        watch_rate    
- Length   :1200   Min.   :  0.00   Min.   :  0.00   Min.   :0.0000  
- N.unique :1200   1st Qu.:  7.00   1st Qu.:  5.00   1st Qu.:0.6000  
- N.blank  :   0   Median : 17.00   Median : 11.50   Median :0.6923  
- Min.nchar:  57   Mean   : 23.22   Mean   : 15.89   Mean   :0.6819  
- Max.nchar:  68   3rd Qu.: 32.00   3rd Qu.: 22.00   3rd Qu.:0.7778  
-                  Max.   :153.00   Max.   :110.00   Max.   :1.0000  
-                                                    NAs    :30      
+  video_url         impressions_n      watched_n        watch_rate    
+ Length:15000       Min.   :  0.00   Min.   :  0.00   Min.   :0.0000  
+ Class :character   1st Qu.:  9.00   1st Qu.:  6.00   1st Qu.:0.6250  
+ Mode  :character   Median : 22.00   Median : 15.00   Median :0.6956  
+                    Mean   : 29.76   Mean   : 20.45   Mean   :0.6947  
+                    3rd Qu.: 41.00   3rd Qu.: 28.00   3rd Qu.:0.7679  
+                    Max.   :230.00   Max.   :158.00   Max.   :1.0000  
+                                                      NA's   :384     
  avg_watch_seconds_when_watched total_watch_seconds avg_watch_share 
  Min.   : 1.00                  Min.   :   0.0      Min.   :0.0000  
- 1st Qu.:11.36                  1st Qu.:  65.0      1st Qu.:0.2982  
- Median :16.00                  Median : 174.0      Median :0.3714  
- Mean   :16.36                  Mean   : 261.7      Mean   :0.3785  
- 3rd Qu.:20.82                  3rd Qu.: 349.2      3rd Qu.:0.4485  
- Max.   :53.00                  Max.   :2677.0      Max.   :1.0000  
- NAs    :55                                         NAs    :30      
+ 1st Qu.:11.75                  1st Qu.:  92.0      1st Qu.:0.3148  
+ Median :16.28                  Median : 226.0      Median :0.3747  
+ Mean   :16.42                  Mean   : 336.5      Mean   :0.3794  
+ 3rd Qu.:20.56                  3rd Qu.: 464.0      3rd Qu.:0.4352  
+ Max.   :52.00                  Max.   :3945.0      Max.   :1.0000  
+ NA's   :536                                        NA's   :384     
  distinct_watchers_n first_impression_at last_impression_at 
- Min.   : 0.00       Min.   :1.754e+09   Min.   :1.754e+09  
- 1st Qu.: 5.00       1st Qu.:1.755e+09   1st Qu.:1.759e+09  
- Median :10.50       Median :1.756e+09   Median :1.759e+09  
- Mean   :13.46       Mean   :1.756e+09   Mean   :1.759e+09  
- 3rd Qu.:19.00       3rd Qu.:1.758e+09   3rd Qu.:1.759e+09  
- Max.   :68.00       Max.   :1.759e+09   Max.   :1.759e+09  
-                     NAs    :30          NAs    :30         
+ Min.   :  0.00      Min.   :1.754e+09   Min.   :1.754e+09  
+ 1st Qu.:  6.00      1st Qu.:1.758e+09   1st Qu.:1.769e+09  
+ Median : 15.00      Median :1.762e+09   Median :1.770e+09  
+ Mean   : 19.35      Mean   :1.762e+09   Mean   :1.769e+09  
+ 3rd Qu.: 27.00      3rd Qu.:1.766e+09   3rd Qu.:1.770e+09  
+ Max.   :135.00      Max.   :1.770e+09   Max.   :1.770e+09  
+                     NA's   :384         NA's   :384        
  first_watch_at      last_watch_at      
  Min.   :1.754e+09   Min.   :1.754e+09  
- 1st Qu.:1.755e+09   1st Qu.:1.759e+09  
- Median :1.756e+09   Median :1.759e+09  
- Mean   :1.756e+09   Mean   :1.759e+09  
- 3rd Qu.:1.758e+09   3rd Qu.:1.759e+09  
- Max.   :1.759e+09   Max.   :1.759e+09  
- NAs    :30          NAs    :30         </code></pre>
+ 1st Qu.:1.758e+09   1st Qu.:1.769e+09  
+ Median :1.762e+09   Median :1.770e+09  
+ Mean   :1.762e+09   Mean   :1.769e+09  
+ 3rd Qu.:1.766e+09   3rd Qu.:1.770e+09  
+ Max.   :1.770e+09   Max.   :1.770e+09  
+ NA's   :384         NA's   :384        </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(views))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(views))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                      video_id                     creator_id 
                              0                              0 
@@ -257,17 +266,17 @@ Attaching package: 'dplyr'</code></pre>
                      video_url                  impressions_n 
                              0                              0 
                      watched_n                     watch_rate 
-                             0                             30 
+                             0                            384 
 avg_watch_seconds_when_watched            total_watch_seconds 
-                            55                              0 
+                           536                              0 
                avg_watch_share            distinct_watchers_n 
-                            30                              0 
+                           384                              0 
            first_impression_at             last_impression_at 
-                            30                             30 
+                           384                            384 
                 first_watch_at                  last_watch_at 
-                            30                             30 </code></pre>
+                           384                            384 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "video_id"                       "creator_id"                    
  [3] "video_length_sec"               "published_at"                  
@@ -278,56 +287,56 @@ avg_watch_seconds_when_watched            total_watch_seconds
 [13] "first_impression_at"            "last_impression_at"            
 [15] "first_watch_at"                 "last_watch_at"                 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(views)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 1,200
+<pre><code>Rows: 15,000
 Columns: 16
 $ video_id                       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, …
-$ creator_id                     &lt;int&gt; 37, 5, 46, 48, 47, 26, 34, 17, 44, 56, …
-$ video_length_sec               &lt;int&gt; 24, 52, 23, 36, 33, 34, 31, 48, 32, 32,…
-$ published_at                   &lt;int&gt; 1754354430, 1756627738, 1758745786, 175…
-$ video_url                      &lt;chr&gt; "https://www.tiktok.com/@charlottegarci…
-$ impressions_n                  &lt;int&gt; 66, 15, 1, 42, 24, 26, 21, 31, 14, 18, …
-$ watched_n                      &lt;int&gt; 42, 9, 0, 23, 21, 11, 15, 22, 6, 10, 13…
-$ watch_rate                     &lt;dbl&gt; 0.6363636, 0.6000000, 0.0000000, 0.5476…
-$ avg_watch_seconds_when_watched &lt;dbl&gt; 12.04762, 34.11111, NA, 14.47826, 17.23…
-$ total_watch_seconds            &lt;int&gt; 506, 307, 0, 333, 362, 234, 304, 408, 1…
-$ avg_watch_share                &lt;dbl&gt; 0.3194444, 0.3935897, 0.0000000, 0.2202…
-$ distinct_watchers_n            &lt;int&gt; 34, 8, 0, 18, 17, 11, 14, 20, 6, 10, 12…
-$ first_impression_at            &lt;int&gt; 1754358053, 1756749929, 1758673041, 175…
-$ last_impression_at             &lt;int&gt; 1758872692, 1758795937, 1758673041, 175…
-$ first_watch_at                 &lt;int&gt; 1754358053, 1756749929, 1758673041, 175…
-$ last_watch_at                  &lt;int&gt; 1758872692, 1758795937, 1758673041, 175…</code></pre>
+$ creator_id                     &lt;int&gt; 66, 62, 176, 22, 39, 148, 158, 30, 200,…
+$ video_length_sec               &lt;int&gt; 14, 47, 37, 29, 28, 36, 30, 34, 25, 48,…
+$ published_at                   &lt;int&gt; 1767297237, 1768475971, 1766815457, 175…
+$ video_url                      &lt;chr&gt; "https://www.tiktok.com/@olivialive2824…
+$ impressions_n                  &lt;int&gt; 4, 0, 14, 67, 25, 14, 23, 19, 6, 86, 4,…
+$ watched_n                      &lt;int&gt; 3, 0, 10, 49, 18, 7, 19, 14, 4, 64, 3, …
+$ watch_rate                     &lt;dbl&gt; 0.7500000, NA, 0.7142857, 0.7313433, 0.…
+$ avg_watch_seconds_when_watched &lt;dbl&gt; 10.66667, NA, 18.60000, 15.38776, 14.44…
+$ total_watch_seconds            &lt;int&gt; 32, 0, 186, 754, 260, 133, 322, 273, 73…
+$ avg_watch_share                &lt;dbl&gt; 0.5714286, NA, 0.3590734, 0.3880597, 0.…
+$ distinct_watchers_n            &lt;int&gt; 3, 0, 10, 43, 15, 7, 19, 14, 4, 59, 3, …
+$ first_impression_at            &lt;int&gt; 1768287244, NA, 1766868873, 1755661745,…
+$ last_impression_at             &lt;int&gt; 1769439546, NA, 1769741156, 1769429852,…
+$ first_watch_at                 &lt;int&gt; 1768287244, NA, 1766868873, 1755661745,…
+$ last_watch_at                  &lt;int&gt; 1769439546, NA, 1769741156, 1769429852,…</code></pre>
 </div>
 </div>
 </section>
 <section id="general-summary" class="level1">
 <h1>General Summary</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>overview <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">videos =</span> <span class="fu">n</span>(),</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">creators =</span> <span class="fu">n_distinct</span>(creator_id),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_length =</span> <span class="fu">mean</span>(video_length_sec),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_impressions =</span> <span class="fu">mean</span>(impressions_n),</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watched =</span> <span class="fu">mean</span>(watched_n),</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_rate =</span> <span class="fu">mean</span>(watch_rate, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_share =</span> <span class="fu">mean</span>(avg_watch_share, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_seconds =</span> <span class="fu">mean</span>(avg_watch_seconds_when_watched, <span class="at">na.rm=</span><span class="cn">TRUE</span>) </span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(overview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>overview <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">videos =</span> <span class="fu">n</span>(),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">creators =</span> <span class="fu">n_distinct</span>(creator_id),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_length =</span> <span class="fu">mean</span>(video_length_sec),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_impressions =</span> <span class="fu">mean</span>(impressions_n),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watched =</span> <span class="fu">mean</span>(watched_n),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_rate =</span> <span class="fu">mean</span>(watch_rate, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_share =</span> <span class="fu">mean</span>(avg_watch_share, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_watch_seconds =</span> <span class="fu">mean</span>(avg_watch_seconds_when_watched, <span class="at">na.rm=</span><span class="cn">TRUE</span>) </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(overview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  videos creators avg_length avg_impressions avg_watched avg_watch_rate
-1   1200       60    29.5475        23.21833      15.895       0.681892
+1  15000      200   30.08247        29.76147     20.4512      0.6946644
   avg_watch_share avg_watch_seconds
-1       0.3784639          16.35752</code></pre>
+1       0.3794281          16.42387</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>views<span class="sc">$</span>watched_pct <span class="ot">&lt;-</span> views<span class="sc">$</span>watched_n <span class="sc">/</span> views<span class="sc">$</span>impressions_n <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(views<span class="sc">$</span>video_length_sec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>views<span class="sc">$</span>watched_pct <span class="ot">&lt;-</span> views<span class="sc">$</span>watched_n <span class="sc">/</span> views<span class="sc">$</span>impressions_n <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(views<span class="sc">$</span>video_length_sec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -335,10 +344,10 @@ $ last_watch_at                  &lt;int&gt; 1758872692, 1758795937, 1758673041,
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>goodvideos <span class="ot">&lt;-</span> <span class="fu">subset</span>(views, watch_rate <span class="sc">&gt;</span> <span class="fl">0.8</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(goodvideos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>goodvideos <span class="ot">&lt;-</span> <span class="fu">subset</span>(views, watch_rate <span class="sc">&gt;</span> <span class="fl">0.8</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(goodvideos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 221</code></pre>
+<pre><code>[1] 2458</code></pre>
 </div>
 </div>
 </section>
@@ -347,39 +356,41 @@ $ last_watch_at                  &lt;int&gt; 1758872692, 1758795937, 1758673041,
 <section id="top-video-by-impressions" class="level3">
 <h3 class="anchored" data-anchor-id="top-video-by-impressions">Top Video by Impressions</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>topvideo <span class="ot">&lt;-</span> views[views<span class="sc">$</span>impressions_n <span class="sc">==</span> <span class="fu">max</span>(views<span class="sc">$</span>impressions_n), ]</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(topvideo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>topvideo <span class="ot">&lt;-</span> views[views<span class="sc">$</span>impressions_n <span class="sc">==</span> <span class="fu">max</span>(views<span class="sc">$</span>impressions_n), ]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(topvideo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    video_id creator_id video_length_sec published_at
-481      481         53               21   1754090791
-                                                           video_url
-481 https://www.tiktok.com/@charlotteyoung/video/9000000000000000481
-    impressions_n watched_n watch_rate avg_watch_seconds_when_watched
-481           153       110  0.7189542                       11.27273
-    total_watch_seconds avg_watch_share distinct_watchers_n first_impression_at
-481                1240       0.3859322                  68          1754009311
-    last_impression_at first_watch_at last_watch_at watched_pct
-481         1759166590     1754009311    1759166590    71.89542</code></pre>
+<pre><code>      video_id creator_id video_length_sec published_at
+13801    13801        197               25   1754027509
+                                                                 video_url
+13801 https://www.tiktok.com/@elijahofficial7391/video/9000000000000013801
+      impressions_n watched_n watch_rate avg_watch_seconds_when_watched
+13801           230       156  0.6782609                       14.29487
+      total_watch_seconds avg_watch_share distinct_watchers_n
+13801                2230       0.3878261                 134
+      first_impression_at last_impression_at first_watch_at last_watch_at
+13801          1754008389         1769541954     1754008389    1769541954
+      watched_pct
+13801    67.82609</code></pre>
 </div>
 </div>
 </section>
 <section id="top-videos-by-watch-rate" class="level3">
 <h3 class="anchored" data-anchor-id="top-videos-by-watch-rate">Top Videos by Watch Rate</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>top_watch <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(video_id, creator_id, watch_rate, impressions_n) <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(impressions_n <span class="sc">&gt;=</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(watch_rate))</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(top_watch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>top_watch <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(video_id, creator_id, watch_rate, impressions_n) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(impressions_n <span class="sc">&gt;=</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(watch_rate))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(top_watch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  video_id creator_id watch_rate impressions_n
-1     1150         17  0.8412698            63
-2     1159         23  0.8400000           100
-3      769         53  0.8090909           110
-4      868         43  0.7968750            64
-5       89         50  0.7903226            62
-6      906          6  0.7837838            74</code></pre>
+1     3683         16  0.8833333            60
+2     2418        125  0.8548387            62
+3     7351        199  0.8536585            82
+4    11903        176  0.8382353            68
+5     5584         97  0.8311688            77
+6    10372        174  0.8279570            93</code></pre>
 </div>
 </div>
 </section>
@@ -387,46 +398,46 @@ $ last_watch_at                  &lt;int&gt; 1758872692, 1758795937, 1758673041,
 <section id="creator-performance" class="level1">
 <h1>Creator Performance</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>creator_summary <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(creator_id) <span class="sc">%&gt;%</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">videos_n =</span> <span class="fu">n</span>(),</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">impressions_total =</span> <span class="fu">sum</span>(impressions_n, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_rate_avg =</span> <span class="fu">mean</span>(watch_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(impressions_total))</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(creator_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>creator_summary <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(creator_id) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">videos_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">impressions_total =</span> <span class="fu">sum</span>(impressions_n, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_rate_avg =</span> <span class="fu">mean</span>(watch_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(impressions_total))</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(creator_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   creator_id videos_n impressions_total watch_rate_avg
        &lt;int&gt;    &lt;int&gt;             &lt;int&gt;          &lt;dbl&gt;
-1         27       46              1344          0.673
-2         42       52              1141          0.688
-3         23       35              1123          0.662
-4         20       48               989          0.705
-5         16       29               852          0.694
-6         22       35               851          0.669</code></pre>
+1          7      152              5791          0.700
+2         96      184              5734          0.665
+3         49      173              5430          0.719
+4        196      143              5152          0.680
+5        134      163              5105          0.696
+6         75      165              4796          0.704</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>creator_engagement <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">engagement =</span> watched_n <span class="sc">/</span> impressions_n) <span class="sc">%&gt;%</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(creator_id) <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_engagement =</span> <span class="fu">mean</span>(engagement, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_engagement))</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(creator_engagement)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>creator_engagement <span class="ot">&lt;-</span> views <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">engagement =</span> watched_n <span class="sc">/</span> impressions_n) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(creator_id) <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_engagement =</span> <span class="fu">mean</span>(engagement, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_engagement))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(creator_engagement)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
   creator_id mean_engagement
        &lt;int&gt;           &lt;dbl&gt;
-1         57           0.798
-2         49           0.786
-3          6           0.779
-4         32           0.770
-5         30           0.747
-6         17           0.744</code></pre>
+1        117           0.749
+2        143           0.743
+3        154           0.741
+4         55           0.738
+5        114           0.736
+6        184           0.732</code></pre>
 </div>
 </div>
 </section>
