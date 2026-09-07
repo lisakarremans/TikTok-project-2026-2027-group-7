@@ -14,7 +14,7 @@ The goal is to practice with Quarto, dplyr, aggregration, and work with Git to g
 ## Run steps
 1. Run `script.r` (in folder /data/raw)
 2. Put the data file (video_view.csv) in the folder /data/raw
-3. Run `summary.qmd` (in folder /src)
+3. Render `summary.qmd` (in folder /src)
 
 ## Expected output
 summary.html
