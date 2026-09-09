@@ -60,7 +60,7 @@ plot_2 <- ggplot(df, aes(x = category, y = score)) +
   theme_light(base_family = "Times") +
   theme(plot.title = element_text(face = "bold", size = 20),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
-    panel.grid.major = element_line(color = "#e0dfe3")
+    panel.grid.major = element_line(color = "white")
   )
 # Save plot 2 as png
 ggsave("plots/plot_2.png", plot = plot_2, width = 10, height = 4)
@@ -78,7 +78,7 @@ plot_3 <- ggplot(users_clean, aes(x = satiation_decay)) +
   theme(
     plot.title = element_text(face = "italic", size = 18),
     axis.title = element_text(size = 15),
-    panel.border = element_rect(color = "#E67E22", fill = NA, size = 1),
+    panel.border = element_rect(color = "orange", fill = NA, size = 1),
     panel.grid.minor = element_blank()
   )
 # Save plot 3 as png
