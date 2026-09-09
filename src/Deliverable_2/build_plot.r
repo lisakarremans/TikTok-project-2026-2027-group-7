@@ -1,11 +1,18 @@
-# Create a plot and save it as png
+# Load the data
+users_clean <- read.csv("../../data/raw/users_clean.csv")
+
+# Create plot 1
 library(ggplot2)
-plot <- ggplot(data = users_clean, aes(x = baseline_login, y = base_videos_watched_mean)) +
+plot_1 <- ggplot(data = users_clean, aes(x = baseline_login, y = base_videos_watched_mean)) +
   geom_point(color = "blue") +
   labs(
-title = "Login frequency vs videos watched",
-x = "Login frequency",
-y = "Mean videos watched"
+    title = "Login frequency vs videos watched",
+    x = "Login frequency",
+    y = "Mean videos watched"
   )
-dir.create("/src/Deliverable_2/plots", showWarnings = FALSE)
-ggsave("plots/plot_1.png", plot = plot, width = 8, height = 6)
+
+# Create folder to save the plots
+dir.create("plots", showWarnings = FALSE)
+
+# Save plot 1
+ggsave("plots/plot_1.png", plot = plot_1, width = 8, height = 6)
