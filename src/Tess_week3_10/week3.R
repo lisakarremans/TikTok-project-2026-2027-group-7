@@ -5,88 +5,129 @@ library(tidyverse)
 url <- paste0(
 "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/watch_events.csv"
 )
-#download.file(url,"../../data/raw/watch_events.csv")
-#watch <- read_csv("../../data/raw/watch_events.csv")
+
+# This path works for running the make file with 1 graph (as said Thurseday that 1 was enough)
+# download.file(url,"../../data/raw/watch_events.csv")
+# watch <- read_csv("../../data/raw/watch_events.csv")
+
+# This path works for saving in R.script
 download.file(url, "data/raw/watch_events.csv")
 watch <- read_csv("data/raw/watch_events.csv")
 
-# Count the number of watch events for each action
-action_counts <- watch %>%
+
+# DATA CLEANING
+# Removing started_at_raw as we also have started_at
+watch <- watch %>%
+  select(-started_at_raw)
+
+#START OF CREATING GRAPHS
+# Count how many times each action happens
+action_count <- watch %>%
   count(action)
 
-# Plot the number of watch events for each action
-ggplot(action_counts, aes(x = action, y = n)) +
+# Graph 1
+# Plot the number of watch events for each action 
+action_counts <- ggplot(action_count, aes(x = action, y = n)) +
   geom_col() +
   labs(
-    title = "Number of watch events by action",
-    x = "Action",
-    y = "Number of watch events"
-  )
+  title = "Distribution of how often each action occurs",
+  x = "Action",
+  y = "Count"
+)
 
-# Save the plot
+# Saves the plot in the map Plots
 ggsave(
-  "src/Tess_week3_10/Plots/action_counts.png",
+  "src/Tess_week3_10/Plots/action_counts.png",plot = action_counts,
   width = 7,
   height = 4
 )
 
-
-
-
-
-# Calculates mean average watch second for each action
-action_grouped <- watch %>%
+# Graph 2
+# Calculate average watch time for each action
+action_group <- watch %>%
   group_by(action) %>%
   summarise(
-    watch_seconds_per_action = mean(watch_seconds, na.rm = TRUE)
+    mean_seconds = mean(watch_seconds, na.rm = TRUE)
   )
 
-# Plots the amount of watch seconds for each action
-grouped_action <- ggplot(action_grouped, aes(x = action, y = watch_seconds_per_action)) +
+# Plot mean watch time for each action
+group_action <- ggplot(action_group, aes(x = action, y = mean_seconds)) +
   geom_col() +
   labs(
-    title = "Mean watch time per seconds by action",
+    title = "Mean watch time by action",
     x = "Action",
-    y = "Mean watch seconds"
+    y = "Mean watch time (seconds)"
   )
 
 # Saves the plot in the map Plots
 ggsave(
-  "Plots/action_watch_seconds.png", plot = grouped_action
+  "src/Tess_week3_10/Plots/mean_watch_seconds.png", plot = group_action,
+   width = 7,
+  height = 4
 )
 
-daily_watch <- watch %>%
+# Graph 3
+# Count watches per day
+time_watch <- watch %>%
   mutate(date = as.Date(started_at)) %>%
   count(date)
 
-# Plot the number of watch events over time
-ggplot(daily_watch, aes(x = date, y = n)) +
+
+# Plot the number of watches per day
+time_watches <- ggplot(time_watch, aes(x = date, y = n)) +
   geom_line() +
   labs(
-    title = "Watch events over time",
+    title = "Number of watches per day",
     x = "Date",
-    y = "Number of watch events"
+    y = "Count"
   )
 
-# Save the plot
+# Saves the plot in the map Plots
 ggsave(
-  "src/Tess_week3_10/Plots/watch_events_over_time.png",
+  "src/Tess_week3_10/Plots/number_of_watches_per_day.png", plot = time_watches,
   width = 7,
   height = 4
 )
 
-# Plot the distribution of watch seconds
-ggplot(watch, aes(x = watch_seconds)) +
+# Graph 4
+# Count watches per session
+session_count <- watch %>%
+  count(session_id)
+
+# Plot the distribution of the number of watches per session
+session_counts <- ggplot(session_count, aes(x = n)) +
   geom_histogram(bins = 20) +
   labs(
-    title = "Distribution of watch seconds",
-    x = "Watch seconds",
+    title = "Distribution of watches per session",
+    x = "Number of watches",
     y = "Count"
   )
 
-# Save the plot
+# Saves the plot in the map Plots
 ggsave(
-  "src/Tess_week3_10/Plots/watch_seconds_distribution.png",
+  "src/Tess_week3_10/Plots/watches_per_session.png",
+  plot = session_counts,
+  width = 7,
+  height = 4
+)
+
+# Graph 5
+# Count how many times each video occurs
+video_count <- watch %>%
+  count(video_id)
+
+# Plot the distribution of watches per video
+video_counts <- ggplot(video_count, aes(x = n)) +
+  geom_histogram(bins = 20) +
+  labs(
+    title = "Distribution of watches per video",
+    x = "Number of watches",
+    y = "Count"
+  )
+
+# Saves the plot in the map Plots
+ggsave(
+  "src/Tess_week3_10/Plots/watches_per_video.png", plot = video_counts,
   width = 7,
   height = 4
 )
