@@ -21,31 +21,35 @@ p1 <- ggplot(sessions, aes(x = session_duration_sec / 60)) +
 
 ggsave("../../output/plot_1_duration_dist.png", plot = p1, width = 7, height = 4)
 
-# plot 2: relationship between duration and videos viewed
-p2 <- ggplot(sessions, aes(x = session_duration_sec / 60, y = videos_viewed)) +
-  geom_point(color = "darkorange", alpha = 0.5) +
-  geom_smooth(method = "lm", color = "navy", se = FALSE) +
+# plot 2: duration vs videos viewed with 3 engagement groups (week 3 style)
+sessions_plot <- sessions %>%
+  mutate(
+    engagement_tier = case_when(
+      videos_viewed < 10 ~ "Low engagement",
+      videos_viewed <= 30 ~ "Medium engagement",
+      TRUE ~ "High engagement"
+    )
+  )
+
+p2 <- ggplot(sessions_plot, aes(x = session_duration_sec / 60, y = videos_viewed, color = engagement_tier)) +
+  geom_point(alpha = 0.6, size = 1.8) +
   labs(
     title = "Session Duration vs Videos Viewed",
-    subtitle = "Linear relationship between duration and content consumption",
+    subtitle = "User engagement tiers across session length",
     x = "Session duration (minutes)",
-    y = "Videos viewed"
+    y = "Videos viewed",
+    color = "Engagement"
   ) +
   theme_minimal()
 
 ggsave("../../output/plot_2_duration_vs_videos.png", plot = p2, width = 7, height = 4)
 
 # plot 3: group comparison by user engagement
-sessions_grouped <- sessions %>%
-  mutate(engagement_level = case_when(
-    videos_viewed < 10 ~ "Low (<10)",
-    videos_viewed <= 30 ~ "Medium (10-30)",
-    TRUE ~ "High (>30)"
-  )) %>%
-  group_by(engagement_level) %>%
+sessions_grouped <- sessions_plot %>%
+  group_by(engagement_tier) %>%
   summarise(avg_duration_min = mean(session_duration_sec / 60, na.rm = TRUE))
 
-p3 <- ggplot(sessions_grouped, aes(x = engagement_level, y = avg_duration_min, fill = engagement_level)) +
+p3 <- ggplot(sessions_grouped, aes(x = engagement_tier, y = avg_duration_min, fill = engagement_tier)) +
   geom_col(show.legend = FALSE) +
   scale_fill_brewer(palette = "Blues") +
   labs(
