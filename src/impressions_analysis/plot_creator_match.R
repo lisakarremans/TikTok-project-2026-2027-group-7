@@ -1,6 +1,6 @@
 library(tidyverse)
 
-impressions <- read_csv("data/impressions_clean.csv")
+impressions <- read_csv("../../data/raw/impressions_clean.csv")
 
 ggplot(impressions, aes(x = score_creator_match, y = score_total)) +
   geom_point() +

@@ -1,6 +1,6 @@
 library(tidyverse)
 
-impressions <- read_csv("data/impressions_clean.csv")
+impressions <- read_csv("../../data/raw/impressions_clean.csv")
 
 ggplot(impressions, aes(x = score_total)) +
   geom_histogram(bins = 30) +
