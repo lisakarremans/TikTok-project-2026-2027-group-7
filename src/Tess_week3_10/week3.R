@@ -1,147 +1,156 @@
-# libraries
+# Libraries
+if (!require("here")) install.packages("here", repos = "https://cloud.r-project.org")
 library(tidyverse)
+library(here)
 
-# Download the Data
+# 1. Download data dynamically using here()
 url <- paste0(
-"https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/watch_events.csv"
+  "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/watch_events.csv"
 )
 
-# This path works for running the make file with 1 graph (as said Thurseday that 1 was enough)
-download.file(url,"../../data/raw/watch_events.csv")
-watch <- read_csv("../../data/raw/watch_events.csv")
+raw_data_dir <- here("data", "raw")
+raw_data_file <- here("data", "raw", "watch_events.csv")
 
-# This path works for saving in R.script
-# download.file(url, "data/raw/watch_events.csv")
-# watch <- read_csv("data/raw/watch_events.csv")
+if (!dir.exists(raw_data_dir)) {
+  dir.create(raw_data_dir, recursive = TRUE)
+}
 
+if (!file.exists(raw_data_file)) {
+  download.file(url, raw_data_file)
+}
 
-# DATA CLEANING
-# Removing started_at_raw as we also have started_at
-watch <- watch %>%
-  select(-started_at_raw)
+watch <- read_csv(raw_data_file)
 
-#START OF CREATING GRAPHS
-# Count how many times each action happens
-action_count <- watch %>%
+# Ensure output directory exists
+plots_dir <- here("src", "Tess_week3_10", "Plots")
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir, recursive = TRUE)
+}
+
+# 2. Data Cleaning & Handling NA / Missing Values
+watch_clean <- watch %>%
+  select(-started_at_raw) %>%
+  filter(!is.na(session_id), !is.na(video_id), !is.na(started_at)) %>%
+  mutate(
+    watch_seconds = replace_na(watch_seconds, 0),
+    started_at_ts = as.POSIXct(started_at, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    started_day = as.Date(started_at_ts),
+    action_type = case_when(
+      action == "watch_full" ~ "Complete Watch",
+      action %in% c("like", "share", "comment") ~ "Active Engagement",
+      is.na(action) ~ "Unknown Action",
+      TRUE ~ "Browse / Other"
+    )
+  )
+
+# Graph 1: Action distribution
+action_count <- watch_clean %>%
   count(action)
 
-# Graph 1
-# Plot the number of watch events for each action if R. script
-action_counts <- ggplot(action_count, aes(x = action, y = n)) +
-  geom_col() +
+action_counts_plot <- ggplot(action_count, aes(x = action, y = n)) +
+  geom_col(fill = "steelblue") +
   labs(
-  title = "Distribution of how often each action occurs",
-  x = "Action",
-  y = "Count"
-)
+    title = "Distribution of how often each action occurs",
+    x = "Action",
+    y = "Count"
+  ) +
+  theme_minimal()
 
-# Saves the plot in the map Plots if make
 ggsave(
-  "Plots/action_counts.png",plot = action_counts,
+  filename = file.path(plots_dir, "action_counts.png"),
+  plot = action_counts_plot,
   width = 7,
   height = 4
 )
 
-# Saves the plot in the map Plots if R
-# ggsave(
-#   "src/Tess_week3_10/Plots/action_counts.png",plot = action_counts,
-#   width = 7,
-#   height = 4
-# )
+# Graph 2: Mean watch time by action
+action_group <- watch_clean %>%
+  group_by(action) %>%
+  summarise(
+    mean_seconds = mean(watch_seconds, na.rm = TRUE)
+  )
 
-# Graph 2
-# Calculate average watch time for each action
-# action_group <- watch %>%
-#   group_by(action) %>%
-#   summarise(
-#     mean_seconds = mean(watch_seconds, na.rm = TRUE)
-#   )
+group_action_plot <- ggplot(action_group, aes(x = action, y = mean_seconds)) +
+  geom_col(fill = "darkorange") +
+  labs(
+    title = "Mean watch time by action",
+    x = "Action",
+    y = "Mean watch time (seconds)"
+  ) +
+  theme_minimal()
 
-# Plot mean watch time for each action
-# group_action <- ggplot(action_group, aes(x = action, y = mean_seconds)) +
-#   geom_col() +
-#   labs(
-#     title = "Mean watch time by action",
-#     x = "Action",
-#     y = "Mean watch time (seconds)"
-#   )
+ggsave(
+  filename = file.path(plots_dir, "mean_watch_seconds.png"),
+  plot = group_action_plot,
+  width = 7,
+  height = 4
+)
 
-# Saves the plot in the map Plots
-# ggsave(
-#   "src/Tess_week3_10/Plots/mean_watch_seconds.png", plot = group_action,
-#    width = 7,
-#   height = 4
-# )
+# Graph 3: Number of watches per day
+time_watch <- watch_clean %>%
+  count(started_day)
 
-# Graph 3
-# Count watches per day
-# time_watch <- watch %>%
-#   mutate(date = as.Date(started_at)) %>%
-#   count(date)
+time_watches_plot <- ggplot(time_watch, aes(x = started_day, y = n)) +
+  geom_line(color = "forestgreen", linewidth = 1) +
+  labs(
+    title = "Number of watches per day",
+    x = "Date",
+    y = "Count"
+  ) +
+  theme_minimal()
 
+ggsave(
+  filename = file.path(plots_dir, "number_of_watches_per_day.png"),
+  plot = time_watches_plot,
+  width = 7,
+  height = 4
+)
 
-# Plot the number of watches per day
-# time_watches <- ggplot(time_watch, aes(x = date, y = n)) +
-#   geom_line() +
-#   labs(
-#     title = "Number of watches per day",
-#     x = "Date",
-#     y = "Count"
-#   )
+# Graph 4: Top sessions with rank()
+session_ranking <- watch_clean %>%
+  filter(action == "watch_full") %>%
+  count(session_id, name = "full_watches") %>%
+  mutate(session_rank = rank(-full_watches, ties.method = "min")) %>%
+  arrange(session_rank) %>%
+  slice_head(n = 15)
 
-# Saves the plot in the map Plots
-# ggsave(
-#   "src/Tess_week3_10/Plots/number_of_watches_per_day.png", plot = time_watches,
-#   width = 7,
-#   height = 4
-# )
+session_counts_plot <- ggplot(session_ranking, aes(x = reorder(factor(session_id), -full_watches), y = full_watches)) +
+  geom_col(fill = "purple") +
+  labs(
+    title = "Top 15 sessions with the most full watches",
+    x = "Session ID",
+    y = "Number of full watches"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Graph 4
-# Filter on only when it is fully watched, puts the highest count first and then take only the first 15
-# session_count <- watch %>%
-#   filter(action == "watch_full") %>%
-#   count(session_id) %>%
-#   arrange(desc(n)) %>%   
-#   head(15)               
+ggsave(
+  filename = file.path(plots_dir, "actions_per_session.png"),
+  plot = session_counts_plot,
+  width = 8,
+  height = 4
+)
 
-# Plot the sessions with the 15 most full watches
-# session_counts <- ggplot(session_count, aes(x = factor(session_id), y = n)) +
-#   geom_col() +
-#   labs(
-#     title = "Top 15 sessions with the most full watches",
-#     x = "Session ID",
-#     y = "Number of full watches"
-#   )
+# Graph 5: Top 10 most watched videos
+video_count <- watch_clean %>%
+  filter(action == "watch_full") %>%
+  count(video_id, name = "full_watches") %>%
+  arrange(desc(full_watches)) %>%
+  slice_head(n = 10)
 
+video_counts_plot <- ggplot(video_count, aes(x = reorder(factor(video_id), -full_watches), y = full_watches)) +
+  geom_col(fill = "coral") +
+  labs(
+    title = "Top 10 most watched videos",
+    x = "Video ID",
+    y = "Number of full watches"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Saves the plot in the map Plots
-# ggsave(
-#   "src/Tess_week3_10/Plots/actions_per_session.png", plot = session_counts,
-#   width = 7,
-#   height = 4
-# )
-
-# Graph 5
-# Keep only videos that were watched fully, puts the highest counts first and only take the highest 15
-# video_count <- watch %>%
-#   filter(action == "watch_full") %>%
-#   count(video_id) %>%
-#   arrange(desc(n)) %>%   
-#   head(10)               
-
-#Plot the videos ID with the most full watches
-# video_counts <- ggplot(video_count, aes(x = factor(video_id), y = n)) +
-#   geom_col() +
-#   labs(
-#     title = "Top 15 most watched videos",
-#     x = "Video ID",
-#     y = "Number of full watches"
-#   )
-
-# Saves the plot in the map Plots
-# ggsave(
-#   "src/Tess_week3_10/Plots/most_watched_videos.png", plot = video_counts,
-#   width = 7,
-#   height = 4
-# )
-
+ggsave(
+  filename = file.path(plots_dir, "most_watched_videos.png"),
+  plot = video_counts_plot,
+  width = 8,
+  height = 4
+)
