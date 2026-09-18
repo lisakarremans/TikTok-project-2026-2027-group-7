@@ -13,10 +13,13 @@ Analyze the data of platform users on TikTok by creating several plots.
 
 ## Run steps
 1. Set the terminal to the folder /src/Deliverable_2
-2. Run the makefile (in folder /src/Deliverable_2) in the terminal
+2. Run the makefile (in folder /src/Deliverable_2) in the terminal with the command make
 
 ## Expected output
 plot_1.png
+plot_2.png
+plot_3.png
+plot_4.png
 
 ## Structure
 - After running the makefile, the datasets should appear in /data/raw
