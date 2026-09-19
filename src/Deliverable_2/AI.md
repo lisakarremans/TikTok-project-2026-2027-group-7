@@ -1,0 +1,4 @@
+- Microsoft Copilot: getting help in setting up the right paths so the makefile could read and run the code.
+- Microsoft Copilot: getting help in writing code to make different types of plots.
+- Microsoft Copilot: getting help in fixing small errors, such as makefile errors or code errors.
+- Microsoft Copilot: asking how to adjust the visualization of the plots. The output was used to learn about different ways of adjusting colors, text, size, etc. in a plot and to apply it to the code in this document.
