@@ -1,6 +1,6 @@
 library(tidyverse)
 
-impressions <- read_csv("../../data/raw/impressions_clean.csv")
+impressions <- read_csv("../data/raw/impressions_clean.csv")
 
 ggplot(impressions, aes(x = score_total)) +
   geom_histogram(bins = 30) +
@@ -11,4 +11,4 @@ ggplot(impressions, aes(x = score_total)) +
   ) +
   theme_minimal()
 
-ggsave("figures/score_total.png")
+ggsave("impressions_analysis/figures/score_total.png")

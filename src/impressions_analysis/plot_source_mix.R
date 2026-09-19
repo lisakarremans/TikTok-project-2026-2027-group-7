@@ -1,6 +1,6 @@
 library(tidyverse)
 
-impressions <- read_csv("../../data/raw/impressions_clean.csv")
+impressions <- read_csv("../data/raw/impressions_clean.csv")
 
 ggplot(impressions, aes(x = source_bucket)) +
   geom_bar() +
@@ -11,4 +11,4 @@ ggplot(impressions, aes(x = source_bucket)) +
   ) +
   theme_minimal()
 
-ggsave("figures/source_mix.png")
+ggsave("impressions_analysis/figures/source_mix.png")

@@ -1,6 +1,6 @@
 library(tidyverse)
 
-impressions <- read_csv("../../data/raw/impressions_clean.csv")
+impressions <- read_csv("../data/raw/impressions_clean.csv")
 
 ggplot(impressions, aes(x = score_category_match, y = score_total)) +
   geom_point() +
@@ -11,4 +11,4 @@ ggplot(impressions, aes(x = score_category_match, y = score_total)) +
   ) +
   theme_minimal()
 
-ggsave("figures/category_match.png")
+ggsave("impressions_analysis/figures/category_match.png")

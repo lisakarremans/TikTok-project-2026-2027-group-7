@@ -1,5 +1,5 @@
 # Load the data
-users_clean <- read.csv("../../data/raw/users_clean.csv")
+users_clean <- read.csv("../data/raw/users_clean.csv")
 
 # Library ggplot2
 library(ggplot2)
@@ -24,9 +24,9 @@ theme_minimal(base_family = "Helvetica") +
     panel.background = element_rect(fill = "black", color = NA)
   )
 ## Create folder to save the plots
-dir.create("plots", showWarnings = FALSE)
+dir.create("users_analysis/plots", showWarnings = FALSE)
 # Save plot 1 as png
-ggsave("plots/plot_1.png", plot = plot_1, width = 8, height = 6)
+ggsave("users_analysis/plots/plot_1.png", plot = plot_1, width = 8, height = 6)
 
 ## Create plot 2
 # Put all content categories in one dataframe
@@ -63,7 +63,7 @@ plot_2 <- ggplot(df, aes(x = category, y = score)) +
     panel.grid.major = element_line(color = "white")
   )
 # Save plot 2 as png
-ggsave("plots/plot_2.png", plot = plot_2, width = 10, height = 4)
+ggsave("users_analysis/plots/plot_2.png", plot = plot_2, width = 10, height = 4)
 
 ## Create plot 3
 # Make plot_3
@@ -82,7 +82,7 @@ plot_3 <- ggplot(users_clean, aes(x = satiation_decay)) +
     panel.grid.minor = element_blank()
   )
 # Save plot 3 as png
-ggsave("plots/plot_3.png", plot = plot_3, width = 10, height = 8)
+ggsave("users_analysis/plots/plot_3.png", plot = plot_3, width = 10, height = 8)
 
 ## Create plot 4
 # Make plot_4
@@ -100,5 +100,5 @@ plot_4 <- ggplot(users_clean, aes(x = need_interaction)) +
     axis.text = element_text(face = "bold", size = 18, color = "darkgreen")
   )
 ## Save plot 4 as png
-ggsave("plots/plot_4.png", plot = plot_4, width = 15, height = 10)
+ggsave("users_analysis/plots/plot_4.png", plot = plot_4, width = 15, height = 10)
 

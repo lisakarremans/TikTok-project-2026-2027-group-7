@@ -22,7 +22,7 @@ if (!file.exists(raw_data_file)) {
 watch <- read_csv(raw_data_file)
 
 # Ensure output directory exists
-plots_dir <- here("src", "Tess_week3_10", "Plots")
+plots_dir <- here("src", "watch_events_analysis", "Plots")
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir, recursive = TRUE)
 }

@@ -1,12 +1,12 @@
 library(tidyverse)
 
 # make sure output folder exists
-if (!dir.exists("../../output")) {
-  dir.create("../../output", recursive = TRUE)
+if (!dir.exists("session_analysis/output")) {
+  dir.create("session_analysis/output", recursive = TRUE)
 }
 
 # read cleaned dataset
-sessions <- read_csv("../../data/sessions_cleaned.csv")
+sessions <- read_csv("../data/raw/sessions_cleaned.csv")
 
 # Only drop for ID for instance
 sessions_clean <- sessions %>%
@@ -30,7 +30,7 @@ p4 <- rank_sessions %>%
   ) +
   theme_minimal()
 
-ggsave("../../output/plot_4_ranked_sessions.png", plot = p4, width = 7, height = 4)
+ggsave("session_analysis/output/plot_4_ranked_sessions.png", plot = p4, width = 7, height = 4)
 
 # plot 1: distribution of session duration (in minutes)
 p1 <- ggplot(sessions, aes(x = session_duration_sec / 60)) +
@@ -43,7 +43,7 @@ p1 <- ggplot(sessions, aes(x = session_duration_sec / 60)) +
   ) +
   theme_minimal()
 
-ggsave("../../output/plot_1_duration_dist.png", plot = p1, width = 7, height = 4)
+ggsave("session_analysis/output/plot_1_duration_dist.png", plot = p1, width = 7, height = 4)
 
 # prepare groups with ordered factor
 tier_order <- c("Low engagement", "Medium engagement", "High engagement")
@@ -71,7 +71,7 @@ p2 <- ggplot(sessions_plot, aes(x = session_duration_sec / 60, y = videos_viewed
   ) +
   theme_minimal()
 
-ggsave("../../output/plot_2_duration_vs_videos.png", plot = p2, width = 7, height = 4)
+ggsave("session_analysis/output/plot_2_duration_vs_videos.png", plot = p2, width = 7, height = 4)
 
 # plot 3: group comparison by user engagement
 sessions_grouped <- sessions_plot %>%
@@ -91,6 +91,6 @@ p3 <- ggplot(sessions_grouped, aes(x = engagement_tier, y = avg_duration_min, fi
   ) +
   theme_minimal()
 
-ggsave("../../output/plot_3_engagement_groups.png", plot = p3, width = 7, height = 4)
+ggsave("session_analysis/output/plot_3_engagement_groups.png", plot = p3, width = 7, height = 4)
 
 print("visualizations completed and saved to output folder")
