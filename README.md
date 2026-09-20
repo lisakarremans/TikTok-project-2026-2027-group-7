@@ -1,26 +1,75 @@
-# TikTok-project-template-2026-group-7
+# TikTok Project 2026-2027 - Group 7
 
 ## Goal
-The goal is to practice with Quarto, dplyr, aggregration, and work with Git to gain more knowledge about how it works.
 
-## Data
-- Main file: video_view.csv
+This project analyzes TikTok platform data from four perspectives:
+
+- Impressions
+- Sessions
+- Users
+- Watch events
+
+Each analysis is stored in its own folder under `src`. The complete workflow is automated through one central Makefile located in the `src` folder.
+
+## Project structure
+
+TikTok-project-2026-2027-group-7/
+├── data/
+│   └── raw/
+│
+├── src/
+│   ├── impressions_analysis/
+│   ├── session_analysis/
+│   ├── users_analysis/
+│   ├── watch_events_analysis/
+│   ├── summary_files/
+│   ├── makefile
+│   ├── summary.html
+│   └── summary.qmd
+│
+├── .gitignore
+├── AI.md
+└── README.md
+
 
 ## Requirements
+
 - R
-- Packages: dplyr, tidyverse
-- Quarto installed
+- Make
+- Required R packages:
+  - tidyverse
+  - dplyr
+  - ggplot2
+  - here
 
-## Run steps
-1. Run `script.r` (in folder /data/raw)
-2. Put the data file (video_view.csv) in the folder /data/raw
-3. Render `summary.qmd` (in folder /src)
+## How to run
 
-## Expected output
-summary.html
+Open a terminal in the root folder of the repository and run:
 
-## Group members
-- Lisa Karremans: working together with Rijk during the coaching session to finish most of the Issues, after class finishing the codes in the summary file, fixing error codes and finilizing the details of the project
-- Rijk van Diest: working together with Lisa during the coaching session to finish most of the Issues
-- Tess Mehlbaum: adding extra input to the summary codes to complete it and structure it with comments, finilizing the README
-- Tiem Spitz: Cleaned up the summary file, added clear titles, fixed the file path to the data, and removed the duplicate calculations
+cd src
+make
+
+
+The Makefile downloads the required data to `data/raw`, runs the cleaning and analysis scripts, and generates the plots.
+
+## Analyses
+
+### Impressions analysis
+Analyzes feed sources, ranking scores, duplicate impressions and malformed impressions.
+
+### Session analysis
+Analyzes session duration, video views and engagement levels.
+
+### Users analysis
+Analyzes user characteristics, behavioural traits and content preferences.
+
+### Watch events analysis
+Analyzes watch-event behaviour, including actions, watch time and viewing patterns.
+
+## Output
+
+The generated plots are saved in the output folders of the corresponding analyses.
+
+## Reproducibility
+
+The complete project can be reproduced by running `make` from the `src` folder.
