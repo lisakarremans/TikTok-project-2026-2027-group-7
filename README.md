@@ -20,9 +20,9 @@ TikTok-project-2026-2027-group-7/
 ├── src/
 │   ├── impressions_analysis/
 │   ├── session_analysis/
+│   ├── summary_files/
 │   ├── users_analysis/
 │   ├── watch_events_analysis/
-│   ├── summary_files/
 │   ├── makefile
 │   ├── summary.html
 │   └── summary.qmd
