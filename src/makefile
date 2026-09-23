@@ -1,5 +1,8 @@
-all: users_analysis/plots/plot_1.png impressions_analysis/figures/source_mix.png impressions_analysis/figures/score_total.png impressions_analysis/figures/category_match.png impressions_analysis/figures/creator_match.png impressions_analysis/figures/satiation_penalty.png session_analysis/output/plot_1_duration_dist.png session_analysis/output/plot_2_duration_vs_videos.png session_analysis/output/plot_3_engagement_groups.png watch_events_analysis/Plots/action_counts.png
+all: ../data/raw/video_view.csv users_analysis/plots/plot_1.png impressions_analysis/figures/source_mix.png impressions_analysis/figures/score_total.png impressions_analysis/figures/category_match.png impressions_analysis/figures/creator_match.png impressions_analysis/figures/satiation_penalty.png session_analysis/output/plot_1_duration_dist.png session_analysis/output/plot_2_duration_vs_videos.png session_analysis/output/plot_3_engagement_groups.png watch_events_analysis/Plots/action_counts.png
 
+../data/raw/video_view.csv: ../data/raw/script.r
+	cd ../data/raw && Rscript script.r
+	
 ../data/raw/users.csv: users_analysis/load_data.r
 	Rscript users_analysis/load_data.R
 
