@@ -1,4 +1,7 @@
-all: users_analysis/plots/plot_1.png impressions_analysis/figures/source_mix.png impressions_analysis/figures/score_total.png impressions_analysis/figures/category_match.png impressions_analysis/figures/creator_match.png impressions_analysis/figures/satiation_penalty.png session_analysis/output/plot_1_duration_dist.png session_analysis/output/plot_2_duration_vs_videos.png session_analysis/output/plot_3_engagement_groups.png watch_events_analysis/Plots/action_counts.png
+all: ../data/raw/video_view.csv users_analysis/plots/plot_1.png impressions_analysis/figures/source_mix.png impressions_analysis/figures/score_total.png impressions_analysis/figures/category_match.png impressions_analysis/figures/creator_match.png impressions_analysis/figures/satiation_penalty.png session_analysis/output/plot_1_duration_dist.png session_analysis/output/plot_2_duration_vs_videos.png session_analysis/output/plot_3_engagement_groups.png watch_events_analysis/Plots/action_counts.png
+
+../data/raw/video_view.csv: download_video_view.R
+	Rscript download_video_view.R
 
 ../data/raw/users.csv ../data/raw/impressions.csv ../data/raw/sessions.csv ../data/raw/watch_events.csv: download_data.R
 	Rscript download_data.R
@@ -39,5 +42,5 @@ session_analysis/output/plot_2_duration_vs_videos.png: session_analysis/visualiz
 session_analysis/output/plot_3_engagement_groups.png: session_analysis/visualize.R ../data/raw/sessions_cleaned.csv
 	Rscript session_analysis/visualize.R
 
-watch_events_analysis/Plots/action_counts.png: watch_events_analysis/clean_data_build_plots.R ../data/raw/tiktok_students.sqlite
+watch_events_analysis/Plots/action_counts.png: watch_events_analysis/clean_data_build_plots.R ../data/raw/watch_events.csv
 	Rscript watch_events_analysis/clean_data_build_plots.R
