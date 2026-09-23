@@ -96,3 +96,50 @@ creator_engagement <- views %>%
 
 head(creator_engagement)
 ```
+# Regression Analysis
+
+This analysis investigates the relationship between `score_satiation_penalty` and `feed_rank`.
+
+```{r}
+impressions <- read_csv("../data/raw/impressions_clean.csv")
+
+model1 <- lm(
+  feed_rank ~ score_satiation_penalty,
+  data = impressions
+)
+
+summary(model1)
+```
+
+The first model shows a significant positive relationship between `score_satiation_penalty` and `feed_rank`. A one-unit increase in `score_satiation_penalty` is associated with an increase of approximately 4.09 in `feed_rank`. The model explains approximately 5.8% of the variation in `feed_rank`.
+
+## Relationship Plot
+
+```{r}
+ggplot(
+  impressions,
+  aes(x = score_satiation_penalty, y = feed_rank)
+) +
+  geom_point(alpha = 0.2) +
+  labs(
+    title = "Satiation penalty and feed rank",
+    x = "Satiation penalty",
+    y = "Feed rank"
+  ) +
+  theme_minimal()
+```
+
+The plot shows the positive relationship between `score_satiation_penalty` and `feed_rank` found in the first regression model.
+
+## Extended Regression Model
+
+```{r}
+model2 <- lm(
+  feed_rank ~ score_satiation_penalty + score_category_match + score_creator_match,
+  data = impressions
+)
+
+summary(model2)
+```
+
+After adding `score_category_match` and `score_creator_match`, the relationship between `score_satiation_penalty` and `feed_rank` remains similar. The extended model explains approximately 5.9% of the variation in `feed_rank`.
