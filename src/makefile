@@ -5,6 +5,9 @@ all: ../data/raw/video_view.csv users_analysis/plots/plot_1.png impressions_anal
 
 ../data/raw/users.csv ../data/raw/impressions.csv ../data/raw/sessions.csv ../data/raw/watch_events.csv: download_data.R
 	Rscript download_data.R
+	
+../data/raw/users.csv: users_analysis/load_data.r
+	Rscript users_analysis/load_data.R
 
 ../data/raw/users_clean.csv: users_analysis/clean_data.R ../data/raw/users.csv
 	Rscript users_analysis/clean_data.R
