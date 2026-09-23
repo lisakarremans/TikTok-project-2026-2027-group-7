@@ -1,25 +1,9 @@
 # Libraries
-if (!require("here")) install.packages("here", repos = "https://cloud.r-project.org")
 library(tidyverse)
 library(here)
 
-# 1. Download data dynamically using here()
-url <- paste0(
-  "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/watch_events.csv"
-)
-
-raw_data_dir <- here("data", "raw")
-raw_data_file <- here("data", "raw", "watch_events.csv")
-
-if (!dir.exists(raw_data_dir)) {
-  dir.create(raw_data_dir, recursive = TRUE)
-}
-
-if (!file.exists(raw_data_file)) {
-  download.file(url, raw_data_file)
-}
-
-watch <- read_csv(raw_data_file)
+# 1. Download data
+watch_events <- read.csv("../data/raw/watch_events.csv")
 
 # Ensure output directory exists
 plots_dir <- here("src", "watch_events_analysis", "Plots")
@@ -28,7 +12,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # 2. Data Cleaning & Handling NA / Missing Values
-watch_clean <- watch %>%
+watch_clean <- watch_events %>%
   select(-started_at_raw) %>%
   filter(!is.na(session_id), !is.na(video_id), !is.na(started_at)) %>%
   mutate(
@@ -42,6 +26,9 @@ watch_clean <- watch %>%
       TRUE ~ "Browse / Other"
     )
   )
+
+# Save cleaned dataset
+write_csv(watch_clean, "../data/raw/watch_clean.csv")
 
 # Graph 1: Action distribution
 action_count <- watch_clean %>%
