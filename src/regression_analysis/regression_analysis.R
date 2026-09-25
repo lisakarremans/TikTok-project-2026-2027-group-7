@@ -1,7 +1,9 @@
 library(tidyverse)
+library(here)
 
-impressions <- read_csv("../data/raw/impressions_clean.csv")
-
+impressions <- read_csv(
+  here("data", "raw", "impressions_clean.csv")
+)
 model1 <- lm(
   feed_rank ~ score_satiation_penalty,
   data = impressions
@@ -29,7 +31,7 @@ ggplot(
   theme_minimal()
 
 ggsave(
-  "regression_analysis/regression_plot.png",
+  here("output", "regression_plot.png"),
   width = 7,
   height = 4
 )
