@@ -5,6 +5,8 @@ format: pdf
 
 # Setup & Data Import
 
+This section loads the necessary R libraries and imports the raw TikTok video view dataset for our analysis.
+
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -13,6 +15,8 @@ views <- read.csv("data/raw/video_view.csv")
 ```
 
 # Data Inspection
+
+Here we check the size and structure of our data to make sure everything looks right.
 
 ```{r}
 count_rows <- nrow(views)
@@ -28,6 +32,8 @@ glimpse(views)
 ```
 
 # General Summary
+
+This section gives an overview of the main numbers, such as average video length, impressions, and watch rates.
 
 ```{r}
 overview <- views %>%
@@ -45,6 +51,8 @@ overview <- views %>%
 print(overview)
 ```
 
+The histogram shows how video lengths are distributed. We also found r nrow(goodvideos) videos with a watch rate higher than 80%.
+
 ```{r}
 views$watched_pct <- views$watched_n / views$impressions_n * 100
 
@@ -54,13 +62,20 @@ goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
 ```
 
+
 # Top Videos
+
+
+This video got the most impressions in the whole dataset.
 
 ### Top Video by Impressions
 ```{r}
 topvideo <- views[views$impressions_n == max(views$impressions_n), ]
 print(topvideo)
 ```
+
+
+To filter out noise, we look at videos with at least 60 impressions and rank them by their watch rate.
 
 ### Top Videos by Watch Rate
 ```{r}
@@ -73,6 +88,8 @@ head(top_watch)
 ```
 
 # Creator Performance
+
+In this section, we evaluate creator productivity by looking at total impressions generated per creator and their average audience engagement.
 
 ```{r}
 creator_summary <- views %>%
@@ -101,7 +118,7 @@ head(creator_engagement)
 This analysis investigates the relationship between `score_satiation_penalty` and `feed_rank`.
 
 ```{r}
-impressions <- read_csv("data/raw/impressions_clean.csv")
+impressions <- read_csv("data/raw/impressions_clean.csv", show_col_types = FALSE)
 
 model1 <- lm(
   feed_rank ~ score_satiation_penalty,
@@ -110,10 +127,11 @@ model1 <- lm(
 
 summary(model1)
 ```
-
 The first model shows a significant positive relationship between `score_satiation_penalty` and `feed_rank`. A one-unit increase in `score_satiation_penalty` is associated with an increase of approximately 4.09 in `feed_rank`. The model explains approximately 5.8% of the variation in `feed_rank`.
 
 ## Relationship Plot
+
+The plot above visualizes the positive relationship between score_satiation_penalty and feed_rank found in our initial regression model, complete with a linear trend line
 
 ```{r}
 ggplot(
@@ -121,6 +139,7 @@ ggplot(
   aes(x = score_satiation_penalty, y = feed_rank)
 ) +
   geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", color = "blue", se = TRUE) +
   labs(
     title = "Satiation penalty and feed rank",
     x = "Satiation penalty",
@@ -132,7 +151,6 @@ ggplot(
 The plot shows the positive relationship between `score_satiation_penalty` and `feed_rank` found in the first regression model.
 
 ## Extended Regression Model
-
 ```{r}
 model2 <- lm(
   feed_rank ~ score_satiation_penalty + score_category_match + score_creator_match,
