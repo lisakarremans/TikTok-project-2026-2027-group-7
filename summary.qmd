@@ -1,6 +1,6 @@
 ---
 title: "TikTok Video View Summary"
-format: html
+format: pdf
 ---
 
 # Setup & Data Import
@@ -9,7 +9,7 @@ format: html
 library(dplyr)
 library(tidyverse)
 
-views <- read.csv("../data/raw/video_view.csv")
+views <- read.csv("data/raw/video_view.csv")
 ```
 
 # Data Inspection
@@ -96,13 +96,12 @@ creator_engagement <- views %>%
 
 head(creator_engagement)
 ```
-
 # Regression Analysis
 
 This analysis investigates the relationship between `score_satiation_penalty` and `feed_rank`.
 
 ```{r}
-impressions <- read_csv("data/raw/impressions_clean.csv", show_col_types = FALSE)
+impressions <- read_csv("data/raw/impressions_clean.csv")
 
 model1 <- lm(
   feed_rank ~ score_satiation_penalty,
@@ -110,6 +109,9 @@ model1 <- lm(
 )
 
 summary(model1)
+```
+
+The first model shows a significant positive relationship between `score_satiation_penalty` and `feed_rank`. A one-unit increase in `score_satiation_penalty` is associated with an increase of approximately 4.09 in `feed_rank`. The model explains approximately 5.8% of the variation in `feed_rank`.
 
 ## Relationship Plot
 
@@ -119,7 +121,6 @@ ggplot(
   aes(x = score_satiation_penalty, y = feed_rank)
 ) +
   geom_point(alpha = 0.2) +
-  geom_smooth(method = "lm", color = "blue", se = TRUE) +
   labs(
     title = "Satiation penalty and feed rank",
     x = "Satiation penalty",
