@@ -30,8 +30,13 @@ ggplot(
   ) +
   theme_minimal()
 
+dir.create(
+  here("src", "regression_analysis", "output"),
+  showWarnings = FALSE
+)
+
 ggsave(
-  here("output", "regression_plot.png"),
+  here("src", "regression_analysis", "output", "regression_plot.png"),
   width = 7,
   height = 4
 )
