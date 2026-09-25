@@ -52,6 +52,7 @@ make
 
 The Makefile downloads the required data to `data/raw`, runs the cleaning and analysis scripts, and generates the plots.
 
+Make sure that run it from the src to get the regression analyse plot, otherwise check with cd src
 ## Analyses
 
 ### Impressions analysis
@@ -65,6 +66,9 @@ Analyzes user characteristics, behavioural traits and content preferences.
 
 ### Watch events analysis
 Analyzes watch-event behaviour, including actions, watch time and viewing patterns.
+
+### Regression analysis
+Make sure that run it from the src to get the regression analyse plot, otherwise check with cd src
 
 ## Output
 
