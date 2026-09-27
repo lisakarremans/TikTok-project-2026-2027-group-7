@@ -113,6 +113,7 @@ creator_engagement <- views %>%
 
 head(creator_engagement)
 ```
+
 # Regression Analysis
 
 This analysis investigates the relationship between `score_satiation_penalty` and `feed_rank`.
