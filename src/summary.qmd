@@ -56,13 +56,13 @@ nrow(goodvideos)
 
 # Top Videos
 
-### Top Video by Impressions
+## Top Video by Impressions
 ```{r}
 topvideo <- views[views$impressions_n == max(views$impressions_n), ]
 print(topvideo)
 ```
 
-### Top Videos by Watch Rate
+## Top Videos by Watch Rate
 ```{r}
 top_watch <- views %>%
   select(video_id, creator_id, watch_rate, impressions_n) %>%
