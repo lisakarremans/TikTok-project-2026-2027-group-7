@@ -1,3 +1,5 @@
 *.csv
 *.png
 *.sqlite
+/.quarto/
+**/*.quarto_ipynb

@@ -1,0 +1,600 @@
+---
+title: "TikTok Video View Summary"
+format: pdf
+execute:
+  echo: false
+  warning: false
+---
+
+# Setup & Data Import
+This section loads the necessary R libraries and imports the raw TikTok datasets for our analysis.
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(here)
+library(DBI)
+library(RSQLite)
+
+if (!dir.exists("data/raw")) {
+  dir.create("data/raw", recursive = TRUE)
+}
+
+data_url <- paste0("https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/video_view.csv")
+download.file(data_url, "data/raw/video_view.csv", mode = "wb")
+list.files()
+
+views <- read.csv("data/raw/video_view.csv")
+
+data_url <- "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/users.csv"
+
+download.file(data_url, "data/raw/users.csv", mode = "wb")
+list.files()
+
+data_url <- "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/impressions.csv"
+
+download.file(data_url, "data/raw/impressions.csv", mode = "wb")
+list.files()
+
+impressions <- read.csv("data/raw/impressions.csv")
+
+data_url <- "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/sessions.csv"
+
+download.file(data_url, "data/raw/sessions.csv", mode = "wb")
+list.files()
+
+data_url <- "https://raw.githubusercontent.com/hannesdatta/course-dprep/refs/heads/main/material/project/coaching_2_data/watch_events.csv"
+
+download.file(data_url, "data/raw/watch_events.csv", mode = "wb")
+list.files()
+```
+
+# Data Inspection
+Here we check the size and structure of our data to make sure everything looks right.
+
+```{r}
+count_rows <- nrow(views)
+print(count_rows)
+
+str(views)
+head(views)
+summary(views)
+colSums(is.na(views))
+
+names(views)
+glimpse(views)
+```
+
+# General Summary
+This section gives an overview of the main numbers, such as average video length, impressions, and watch rates.
+
+```{r}
+overview <- views %>%
+  summarize(
+    videos = n(),
+    creators = n_distinct(creator_id),
+    avg_length = mean(video_length_sec),
+    avg_impressions = mean(impressions_n),
+    avg_watched = mean(watched_n),
+    avg_watch_rate = mean(watch_rate, na.rm=TRUE),
+    avg_watch_share = mean(avg_watch_share, na.rm=TRUE),
+    avg_watch_seconds = mean(avg_watch_seconds_when_watched, na.rm=TRUE) 
+  )
+
+print(overview)
+```
+
+The histogram shows how video lengths are distributed. We also found r nrow(goodvideos) videos with a watch rate higher than 80%.
+
+```{r}
+views$watched_pct <- views$watched_n / views$impressions_n * 100
+
+hist(views$video_length_sec)
+
+goodvideos <- subset(views, watch_rate > 0.8)
+nrow(goodvideos)
+```
+
+
+# Top Videos
+This video got the most impressions in the whole dataset.
+
+### Top Video by Impressions
+```{r}
+topvideo <- views[views$impressions_n == max(views$impressions_n), ]
+print(topvideo)
+```
+
+To filter out noise, we look at videos with at least 60 impressions and rank them by their watch rate.
+
+### Top Videos by Watch Rate
+```{r}
+top_watch <- views %>%
+  select(video_id, creator_id, watch_rate, impressions_n) %>%
+  filter(impressions_n >= 60) %>%
+  arrange(desc(watch_rate))
+
+head(top_watch)
+```
+
+# Creator Performance
+In this section, we evaluate creator productivity by looking at total impressions generated per creator and their average audience engagement.
+
+```{r}
+creator_summary <- views %>%
+  group_by(creator_id) %>%
+  summarise(
+    videos_n = n(),
+    impressions_total = sum(impressions_n, na.rm = TRUE),
+    watch_rate_avg = mean(watch_rate, na.rm = TRUE)
+  ) %>%
+  arrange(desc(impressions_total))
+
+head(creator_summary)
+```
+
+```{r}
+creator_engagement <- views %>%
+  mutate(engagement = watched_n / impressions_n) %>%
+  group_by(creator_id) %>%
+  summarise(mean_engagement = mean(engagement, na.rm = TRUE)) %>%
+  arrange(desc(mean_engagement))
+
+head(creator_engagement)
+```
+
+# Basic data Inspection
+This section inspects and analyses separate datasets, namely the impressions, sessions, users and watch events.
+
+## Impressions analysis
+
+```{r}
+impressions <- read.csv("data/raw/impressions.csv")
+
+impressions_clean <- impressions %>%
+  distinct(impression_id, .keep_all = TRUE)
+
+write_csv(impressions_clean, "data/raw/impressions_clean.csv")
+
+impressions <- read_csv("data/raw/impressions_clean.csv")
+
+ggplot(impressions, aes(x = source_bucket)) +
+  geom_bar() +
+  labs(
+    title = "Mix of feed sources",
+    x = "Feed source",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(impressions, aes(x = score_category_match, y = score_total)) +
+  geom_point() +
+  labs(
+    title = "Category match and total ranking score",
+    x = "Category match score",
+    y = "Total ranking score"
+  ) +
+  theme_minimal()
+
+ggplot(impressions, aes(x = score_creator_match, y = score_total)) +
+  geom_point() +
+  labs(
+    title = "Creator match and total ranking score",
+    x = "Creator match score",
+    y = "Total ranking score"
+  ) +
+  theme_minimal()
+
+ggplot(impressions, aes(x = score_satiation_penalty)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = "Distribution of satiation penalty",
+    x = "Satiation penalty",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+ggplot(impressions, aes(x = score_total)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = "Distribution of total ranking scores",
+    x = "Total ranking score",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+## Session analysis
+
+```{r}
+# read data
+sessions <- read.csv("data/raw/sessions.csv")
+
+# clean data
+sessions_clean <- sessions %>%
+  filter(!is.na(session_id)) %>%
+  distinct() %>%
+  select(-matches("name|first_name|last_name", ignore.case = TRUE))
+
+# save output
+write_csv(sessions_clean, "data/raw/sessions_cleaned.csv")
+print("done cleaning")
+
+# read cleaned dataset
+sessions <- read_csv("data/raw/sessions_cleaned.csv")
+
+# Only drop for ID for instance
+sessions_clean <- sessions %>%
+  drop_na(session_id) %>%
+  distinct()
+
+# Rank sessions from longest to shortest
+rank_sessions <- sessions %>%
+  mutate(
+    duration_rank = rank(-session_duration_sec)
+  )
+
+p4 <- rank_sessions %>%
+  filter(duration_rank <= 15) %>%
+  ggplot(aes(x = duration_rank, y = session_duration_sec)) +
+  geom_col() +
+  labs(
+    title = "Top 15 Longest Sessions",
+    x = "Rank",
+    y = "Session duration (seconds)"
+  ) +
+  theme_minimal()
+
+# plot 1: distribution of session duration (in minutes)
+p1 <- ggplot(sessions, aes(x = session_duration_sec / 60)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(
+    title = "Distribution of TikTok Session Duration",
+    subtitle = "Calculated in minutes per user session",
+    x = "Session duration (minutes)",
+    y = "Number of sessions"
+  ) +
+  theme_minimal()
+
+# prepare groups with ordered factor
+tier_order <- c("Low engagement", "Medium engagement", "High engagement")
+
+sessions_plot <- sessions %>%
+  mutate(
+    engagement_tier = case_when(
+      videos_viewed < 8 ~ "Low engagement",
+      videos_viewed <= 15 ~ "Medium engagement",
+      TRUE ~ "High engagement"
+    ),
+    engagement_tier = factor(engagement_tier, levels = tier_order)
+  )
+
+# plot 2: duration vs videos viewed with ordered tiers
+p2 <- ggplot(sessions_plot, aes(x = session_duration_sec / 60, y = videos_viewed, color = engagement_tier)) +
+  geom_point(alpha = 0.6, size = 1.8) +
+  scale_color_discrete(breaks = tier_order) +
+  labs(
+    title = "Session Duration vs Videos Viewed",
+    subtitle = "User engagement tiers across session length",
+    x = "Session duration (minutes)",
+    y = "Videos viewed",
+    color = "Engagement"
+  ) +
+  theme_minimal()
+
+# plot 3: group comparison by user engagement
+sessions_grouped <- sessions_plot %>%
+  group_by(engagement_tier) %>%
+  summarise(avg_duration_min = mean(session_duration_sec / 60, na.rm = TRUE)) %>%
+  mutate(engagement_tier = factor(engagement_tier, levels = tier_order))
+
+p3 <- ggplot(sessions_grouped, aes(x = engagement_tier, y = avg_duration_min, fill = engagement_tier)) +
+  geom_col(show.legend = FALSE) +
+  scale_x_discrete(limits = tier_order) +
+  scale_fill_brewer(palette = "Blues") +
+  labs(
+    title = "Average Session Duration by Engagement Level",
+    subtitle = "Comparing session length across different user tiers",
+    x = "Engagement level",
+    y = "Average duration (minutes)"
+  ) +
+  theme_minimal()
+
+p1
+p2
+p3
+p4
+```
+
+## Users analysis
+
+```{r}
+users <- read.csv("data/raw/users.csv")
+
+users_clean <- users %>%
+  select(-user_name, -user_handle)
+write.csv(users_clean, "data/raw/users_clean.csv", row.names = FALSE)
+
+# Load the data
+users_clean <- read.csv("data/raw/users_clean.csv")
+
+## Create plot 1
+# Make plot_1
+plot_1 <- ggplot(data = users_clean, aes(x = baseline_login, y = base_videos_watched_mean)) +
+  geom_point(color = "blue", alpha = 0.7, size = 3) +
+  labs(
+    title = "Login frequency vs videos watched",
+    x = "Login frequency",
+    y = "Mean videos watched"
+  ) +
+theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 18, color = "white"),
+    axis.title = element_text(face = "bold", color = "white"),
+    axis.text = element_text(color = "white"),
+    panel.grid.major = element_line(color = "#444444"),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "black", color = NA),
+    panel.background = element_rect(fill = "black", color = NA)
+  )
+
+## Create plot 2
+# Put all content categories in one dataframe
+df <- data.frame(
+  category = c(
+    "Comedy", "Dance", "BeautyFashion", "Food",
+    "FitnessSports", "Gaming", "DIYHome", "Travel",
+    "Education", "Pets"
+  ),
+  score = c(
+    mean(users_clean$pref_Comedy, na.rm = TRUE),
+    mean(users_clean$pref_Dance, na.rm = TRUE),
+    mean(users_clean$pref_BeautyFashion, na.rm = TRUE),
+    mean(users_clean$pref_Food, na.rm = TRUE),
+    mean(users_clean$pref_FitnessSports, na.rm = TRUE),
+    mean(users_clean$pref_Gaming, na.rm = TRUE),
+    mean(users_clean$pref_DIYHome, na.rm = TRUE),
+    mean(users_clean$pref_Travel, na.rm = TRUE),
+    mean(users_clean$pref_Education, na.rm = TRUE),
+    mean(users_clean$pref_Pets, na.rm = TRUE)
+  )
+)
+# Make plot_2
+plot_2 <- ggplot(df, aes(x = category, y = score)) +
+  geom_col(fill = "purple", alpha = 0.85) +
+  labs(
+    title = "Mean preference score across 10 content categories",
+    x = "Content category",
+    y = "Mean preference score"
+  ) +
+  theme_light() +
+  theme(plot.title = element_text(face = "bold", size = 20),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    panel.grid.major = element_line(color = "white")
+  )
+
+## Create plot 3
+# Make plot_3
+plot_3 <- ggplot(users_clean, aes(x = satiation_decay)) +
+  geom_density(fill = "orange", alpha = 0.6) +
+  labs(
+    title = "Density of satiation decay",
+    x = "Satiation decay",
+    y = "Density"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "italic", size = 18),
+    axis.title = element_text(size = 15),
+    panel.border = element_rect(color = "orange", fill = NA, size = 1),
+    panel.grid.minor = element_blank()
+  )
+
+## Create plot 4
+# Make plot_4
+plot_4 <- ggplot(users_clean, aes(x = need_interaction)) +
+  geom_histogram(bins = 30, fill = "green", color = "white", alpha = 0.9) +
+  labs(
+    title = "Distribution of need for interaction",
+    x = "Need for interaction",
+    y = "Count"
+  ) +
+  theme_dark() +
+  theme(
+    plot.title = element_text(face = "bold", size = 20, color = "darkgreen"),
+    axis.title = element_text(face = "bold", size = 18, color = "darkgreen"),
+    axis.text = element_text(face = "bold", size = 18, color = "darkgreen")
+  )
+
+plot_1
+plot_2
+plot_3
+plot_4
+```
+
+## Watch events analysis
+
+```{r}
+# 1. Download data
+watch_events <- read.csv("data/raw/watch_events.csv")
+
+# 2. Data Cleaning & Handling NA / Missing Values
+watch_clean <- watch_events %>%
+  select(-started_at_raw) %>%
+  filter(!is.na(session_id), !is.na(video_id), !is.na(started_at)) %>%
+  mutate(
+    watch_seconds = replace_na(watch_seconds, 0),
+    started_at_ts = as.POSIXct(started_at, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    started_day = as.Date(started_at_ts),
+    action_type = case_when(
+      action == "watch_full" ~ "Complete Watch",
+      action %in% c("like", "share", "comment") ~ "Active Engagement",
+      is.na(action) ~ "Unknown Action",
+      TRUE ~ "Browse / Other"
+    )
+  )
+
+# Save cleaned dataset
+write_csv(watch_clean, "data/raw/watch_clean.csv")
+
+# Graph 1: Action distribution
+action_count <- watch_clean %>%
+  count(action)
+
+action_counts_plot <- ggplot(action_count, aes(x = action, y = n)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Distribution of how often each action occurs",
+    x = "Action",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+# Graph 2: Mean watch time by action
+action_group <- watch_clean %>%
+  group_by(action) %>%
+  summarise(
+    mean_seconds = mean(watch_seconds, na.rm = TRUE)
+  )
+
+group_action_plot <- ggplot(action_group, aes(x = action, y = mean_seconds)) +
+  geom_col(fill = "darkorange") +
+  labs(
+    title = "Mean watch time by action",
+    x = "Action",
+    y = "Mean watch time (seconds)"
+  ) +
+  theme_minimal()
+
+# Graph 3: Number of watches per day
+time_watch <- watch_clean %>%
+  count(started_day)
+
+time_watches_plot <- ggplot(time_watch, aes(x = started_day, y = n)) +
+  geom_line(color = "forestgreen", linewidth = 1) +
+  labs(
+    title = "Number of watches per day",
+    x = "Date",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+# Graph 4: Top sessions with rank()
+session_ranking <- watch_clean %>%
+  filter(action == "watch_full") %>%
+  count(session_id, name = "full_watches") %>%
+  mutate(session_rank = rank(-full_watches, ties.method = "min")) %>%
+  arrange(session_rank) %>%
+  slice_head(n = 15)
+
+plot_4 <- ggplot(session_ranking, aes(x = reorder(factor(session_id), -full_watches), y = full_watches)) +
+  geom_col(fill = "purple") +
+  labs(
+    title = "Top 15 sessions with the most full watches",
+    x = "Session ID",
+    y = "Number of full watches"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Graph 5: Top 10 most watched videos
+video_count <- watch_clean %>%
+  filter(action == "watch_full") %>%
+  count(video_id, name = "full_watches") %>%
+  arrange(desc(full_watches)) %>%
+  slice_head(n = 10)
+
+plot_5 <- ggplot(video_count, aes(x = reorder(factor(video_id), -full_watches), y = full_watches)) +
+  geom_col(fill = "coral") +
+  labs(
+    title = "Top 10 most watched videos",
+    x = "Video ID",
+    y = "Number of full watches"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+action_counts_plot
+group_action_plot
+time_watches_plot
+plot_4
+plot_5
+```
+
+# Regression Analysis
+This analysis investigates the relationship between `score_satiation_penalty` and `feed_rank`.
+
+```{r}
+impressions <- read_csv("data/raw/impressions_clean.csv", show_col_types = FALSE)
+
+model1 <- lm(
+  feed_rank ~ score_satiation_penalty,
+  data = impressions
+)
+
+summary(model1)
+```
+The first model shows a significant positive relationship between `score_satiation_penalty` and `feed_rank`. A one-unit increase in `score_satiation_penalty` is associated with an increase of approximately 4.09 in `feed_rank`. The model explains approximately 5.8% of the variation in `feed_rank`.
+
+## Relationship Plot
+The plot above visualizes the positive relationship between score_satiation_penalty and feed_rank found in our initial regression model, complete with a linear trend line
+
+```{r}
+ggplot(
+  impressions,
+  aes(x = score_satiation_penalty, y = feed_rank)
+) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", color = "blue", se = TRUE) +
+  labs(
+    title = "Satiation penalty and feed rank",
+    x = "Satiation penalty",
+    y = "Feed rank"
+  ) +
+  theme_minimal()
+```
+
+The plot shows the positive relationship between `score_satiation_penalty` and `feed_rank` found in the first regression model.
+
+## Extended Regression Model
+```{r}
+model2 <- lm(
+  feed_rank ~ score_satiation_penalty + score_category_match + score_creator_match,
+  data = impressions
+)
+
+summary(model2)
+```
+
+After adding `score_category_match` and `score_creator_match`, the relationship between `score_satiation_penalty` and `feed_rank` remains similar. The extended model explains approximately 5.9% of the variation in `feed_rank`.
+
+# SQLlite analysis
+Separate tables were created from the datasets from the SQL database.
+
+```{r}
+# Download SQLite file from the provided URL
+url <- "https://filesender.surf.nl/download.php??token=29803da2-2322-4844-aebf-7e0b95129957&files_ids=38390042"
+destination_file <- "data/raw/tiktok_students.sqlite"
+
+# Download the file
+download.file(url, destfile = destination_file, mode = "wb")
+
+cat("File downloaded successfully to:", destination_file, "\n")
+
+con <- dbConnect(SQLite(), dbname = "data/raw/tiktok_students.sqlite")
+interactions <- dbGetQuery(con, "SELECT * FROM interactions") %>% tibble()
+dbDisconnect(con)
+print(interactions)
+
+con <- dbConnect(SQLite(), dbname = "data/raw/tiktok_students.sqlite")
+videos <- dbGetQuery(con, "SELECT
+  video_id,
+  video_length_sec,
+  COUNT(*) AS videos_amount
+FROM videos
+GROUP BY creator_id
+ORDER BY videos_amount DESC;") %>% tibble()
+dbDisconnect(con)
+print(videos)
+```
