@@ -56,6 +56,7 @@ Required R packages include:
 - dplyr
 - ggplot2
 - here
+- DBI
 - RSQLite
 
 ## Data
