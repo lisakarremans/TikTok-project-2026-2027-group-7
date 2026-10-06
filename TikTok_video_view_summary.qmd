@@ -5,9 +5,11 @@ execute:
   echo: false
   warning: false
 ---
+# Introduction
+This report summarizes the analysis of TikTok video view data, providing insights into user engagement, video performance, and creator productivity. The analysis includes data inspection, summary statistics, visualizations, regression analysis, and SQL database queries to extract relevant information.
 
 # Setup & Data Import
-This section loads the necessary R libraries and imports the raw TikTok datasets for our analysis.
+This section loads the necessary R libraries and imports the raw TikTok datasets for our analysis. Downloading the files inside the Quarto document helps make the report reproducible.
 
 ```{r}
 library(dplyr)
@@ -51,7 +53,7 @@ list.files()
 ```
 
 # Data Inspection
-Here we check the size and structure of our data to make sure everything looks right.
+Before starting the analysis, we inspect the video view dataset regarding its size and structure. This helps us understand what one row represents, which variables are available, whether variables have the expected data types, and whether there are missing values. This step is important because later summaries and plots depend on using the correct variables.
 
 ```{r}
 count_rows <- nrow(views)
@@ -67,7 +69,7 @@ glimpse(views)
 ```
 
 # General Summary
-This section gives an overview of the main numbers, such as average video length, impressions, and watch rates.
+This section gives an overview of video view dataset, such as average video length, impressions, and watch rates. These metrics give a first impression of the overall scale and performance of the dataset before looking at individual videos or creators.
 
 ```{r}
 overview <- views %>%
@@ -85,7 +87,7 @@ overview <- views %>%
 print(overview)
 ```
 
-The histogram shows how video lengths are distributed. We also found r nrow(goodvideos) videos with a watch rate higher than 80%.
+The histogram shows how video lengths are distributed. We also found `r nrow(goodvideos)` videos with a watch rate higher than 80%.
 
 ```{r}
 views$watched_pct <- views$watched_n / views$impressions_n * 100
@@ -96,9 +98,8 @@ goodvideos <- subset(views, watch_rate > 0.8)
 nrow(goodvideos)
 ```
 
-
 # Top Videos
-This video got the most impressions in the whole dataset.
+This section identifies videos with the most impressions.
 
 ### Top Video by Impressions
 ```{r}
@@ -144,10 +145,11 @@ creator_engagement <- views %>%
 head(creator_engagement)
 ```
 
-# Basic data Inspection
-This section inspects and analyses separate datasets, namely the impressions, sessions, users and watch events.
+# Additional Data Inspection
+In addition to the video view dataset, we analyze several related datasets: impressions, sessions, users, and watch events. Each dataset captures a different part of the TikTok user experience. The impressions data describe how videos are distributed in the feed, the sessions data describe the duration of sessions, the users data describe user preferences, and the watch events data describe actual viewing behavior.
 
 ## Impressions analysis
+The impressions analysis gives insight into how videos are distributed in the feed and how ranking scores behave. The feed source plot shows that `preferred_new` is the most common source of impressions. The relationship between category match and total ranking score is clearly positive, indicating that better category matching is associated with higher total ranking scores. In contrast, the creator match score shows a more scattered relationship with the total score. The distribution plots show that satiation penalties are generally low, while total ranking scores follow a distribution around zero.
 
 ```{r}
 impressions <- read.csv("data/raw/impressions.csv")
@@ -206,6 +208,7 @@ ggplot(impressions, aes(x = score_total)) +
 ```
 
 ## Session analysis
+The session analysis provides insight into how users spend time on the platform. Session durations are right-skewed, meaning that most sessions are short and only a few are relatively long. The relationship between duration and videos viewed is positive, indicating that longer sessions are associated with higher video consumption. The engagement comparison further supports this: high-engagement sessions have the longest average duration, followed by medium- and low-engagement sessions. Finally, the top-session shows a few long sessions, including one clear outlier.
 
 ```{r}
 # read data
@@ -308,6 +311,7 @@ p4
 ```
 
 ## Users analysis
+The user plots show that user behavior and preferences are heterogeneous. The first plot shows that login frequency does not appear to have a strong linear relationship with the average number of videos watched, as the observations are widely spread out. Average content preferences differ by category, with some categories receiving positive mean scores and others negative mean scores. The distributions of satiation decay and need for interaction are relatively flat, indicating that these user characteristics are spread evenly across the sample rather than being concentrated around one specific value.
 
 ```{r}
 users <- read.csv("data/raw/users.csv")
@@ -414,6 +418,7 @@ plot_4
 ```
 
 ## Watch events analysis
+The watch events plots show variation in viewing behavior. Although action types have similar counts, their watch times differ substantially. Full watches have the highest average watch duration, with the others being fairly shorter. Daily watch counts show fluctuation and are first decreasing before increasing over the observed period. The rankings of sessions and videos further show that full watches are not evenly distributed since a small number of sessions and videos account for the highest numbers of complete views.
 
 ```{r}
 # 1. Download data
@@ -535,6 +540,7 @@ model1 <- lm(
 
 summary(model1)
 ```
+
 The first model shows a significant positive relationship between `score_satiation_penalty` and `feed_rank`. A one-unit increase in `score_satiation_penalty` is associated with an increase of approximately 4.09 in `feed_rank`. The model explains approximately 5.8% of the variation in `feed_rank`.
 
 ## Relationship Plot
@@ -570,7 +576,7 @@ summary(model2)
 After adding `score_category_match` and `score_creator_match`, the relationship between `score_satiation_penalty` and `feed_rank` remains similar. The extended model explains approximately 5.9% of the variation in `feed_rank`.
 
 # SQLlite analysis
-Separate tables were created from the datasets from the SQL database.
+This section demonstrates how data can also be retrieved directly from a SQLite database. Instead of only working with CSV files, we connect to the database using `DBI` and `RSQLite` and run SQL queries to extract specific tables or aggregated results. The first query retrieves the full `interactions` table. The second query groups videos by creator and counts how many videos are associated with each creator.
 
 ```{r}
 # Download SQLite file from the provided URL
@@ -598,3 +604,10 @@ ORDER BY videos_amount DESC;") %>% tibble()
 dbDisconnect(con)
 print(videos)
 ```
+
+The SQLite analysis confirms that the database contains detailed interaction-level information. The `interactions` table includes 514,909 records, showing that user behavior is captured at a much more granular level than in the aggregated CSV summaries. The video aggregation also suggests that creator activity is unevenly distributed. Some creators have substantially more videos than others, with the most active creators contributing more than 200 videos. This indicates that creator productivity varies strongly across the platform.
+
+# Conclusion
+This report combined several TikTok-related datasets into one PDF analysis. The video view data were used to summarize overall video and creator performance, while the impressions, sessions, users, and watch events datasets provided additional insight into feed exposure, user behavior, and viewing activity.
+
+The analysis shows that creator performance can be evaluated in different ways. Total impressions capture reach, while watch rate and engagement measures capture how users respond to shown videos. The session and watch event analyses further show variation in viewing behavior across users, sessions, actions, and videos. The regression analysis suggests an association between ranking-related scores and feed rank. Overall, the report demonstrates how multiple data sources can be combined into a reproducible Quarto PDF workflow.
