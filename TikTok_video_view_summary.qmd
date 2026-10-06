@@ -87,7 +87,7 @@ overview <- views %>%
 print(overview)
 ```
 
-The histogram shows how video lengths are distributed. We also found `r nrow(goodvideos)` videos with a watch rate higher than 80%.
+The histogram shows how video lengths are distributed. It shows that video lengths are mostly concentrated between 20 and 40 seconds, with a peak around 30 seconds. Videos longer than 50 seconds are rarer.
 
 ```{r}
 views$watched_pct <- views$watched_n / views$impressions_n * 100
